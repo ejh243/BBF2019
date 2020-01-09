@@ -24,9 +24,9 @@ lima --version
 
 while read p; do
   basename=${p%.subreads.bam}
-	if [ -f Refine/${basename}.flnc.bam ] ## if final output file doesn't exist, run it through this loop
+	if [ ! -f Refine/${basename}.flnc.bam ] ## if final output file doesn't exist, run it through this loop
 	  then
-		else    
+	  echo "File not found - processing"
 	  ## Circular Consensus Sequence calling
 	  ccs RawData/${p} CCS/${basename}.ccs.bam --min-rq 0.9 --minPasses 1 --reportFile CCS/${basename}.ccs_report.txt
 		
@@ -35,7 +35,11 @@ while read p; do
 		
 	  ## refine
 	  isoseq3 refine --require-polya Lima/${basename}.fl.Clontech_5p--NEB_Clontech_3p.bam Resources/primer.fasta Refine/${basename}.flnc.bam
+	else
+			echo "File Found - skipping"
 	fi
 done < RawData/FilesToProcess.txt
+
+
 
 

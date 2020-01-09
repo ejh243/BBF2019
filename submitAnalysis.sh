@@ -17,3 +17,8 @@ source ./config.txt
 cd ${DATADIR}/BBF2019/
 
 sh RunIsoSeq3_1Pipeline.sh
+sh MergeAndCluster.sh
+
+source activate anaCogent
+module load minimap2
+sh 
