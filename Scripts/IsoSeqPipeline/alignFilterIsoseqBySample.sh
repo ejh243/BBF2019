@@ -11,7 +11,7 @@
 #SBATCH --error=LogFiles/AlignFilterBySample.e
 #SBATCH --job-name=AlignFilterBySample
 
-## this script processes each sample individually
+## this script processes each SMRT cell/  individually
 ## takes polished output
 ## follows pipeline at https://github.com/Magdoll/cDNA_Cupcake/wiki/Cupcake:-supporting-scripts-for-Iso-Seq-after-clustering-step but omits step to further filter isoforms based on number of full length reads
 
