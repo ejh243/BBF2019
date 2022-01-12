@@ -10,7 +10,7 @@
 #SBATCH --output=LogFiles/PreprocessIsoseq3s-%A_%a.o
 #SBATCH --error=LogFiles/PreprocessIsoseq3s-%A_%a.e
 #SBATCH --job-name=PreprocessIsoseq3s-%A_%a.e
-#SBATCH --array=0-19%10 ## runs 19 jobs with 10 at any one time
+#SBATCH --array=19-32%10 ## runs multiple jobs with 10 at any one time
 
 echo "Changing Folder to: "
 echo $SLURM_SUBMIT_DIR

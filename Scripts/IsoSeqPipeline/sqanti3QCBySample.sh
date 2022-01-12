@@ -38,6 +38,12 @@ do
 		-o $sampleName -d ${sample}/SQANTI3/ --cage_peak ${SQANTIDATA}/ref_TSS_annotation/human.refTSS_v3.1.hg38.bed    \
 			--polyA_motif_list ${SQANTIDATA}/polyA_motifs/mouse_and_human.polyA_motif.txt    \
 			 -fl ${sample}/out.collapsed.filtered.abundance.txt  --isoAnnotLite --saturation --expression ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${sampleName}.isoforms.results --cpus 4 --report both 
+			 
+		## filter gtf based on sqanti classification
+		python ${SOFTWAREPATH}/SQANTI3/sqanti3_RulesFilter.py ${sample}/SQANTI3/${sampleName}_classification.txt \
+                         ${sample}/SQANTI3/${sampleName}_corrected.fasta \
+                         ${sample}/SQANTI3/${sampleName}_corrected.gtf
+		
 	else
 		echo "Expression counts matrix does not exist for " ${sampleName} ": skipping"
 	fi
