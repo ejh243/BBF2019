@@ -1,9 +1,9 @@
-## bash script to automate processing of isoseq3 pipeline
-## assumes isoseq3 has been installed/loaded
-## these steps need to be run on each file separately
+## bash script to automate alignment of isoseq data
+## assumes minimap2 has been installed/loaded
+## these steps are designed to be run on each SMRT cell separately
 ## do not store any sensitive data use config file to specify filepaths etc.
-## this script requires ..hq.fastq.gz files are located in the ${PROCESSEDDIR}/Polish folder
-## follows pipeline at https://github.com/Magdoll/cDNA_Cupcake/wiki/Cupcake:-supporting-scripts-for-Iso-Seq-after-clustering-step but omits step to further filter isoforms based on number of full length reads
+## this script requires .hq.fastq.gz file are located in the ${PROCESSEDDIR}/Polish folder
+
 
 p=$1
 basename=${p%.subreads.bam}

@@ -12,26 +12,13 @@
 #SBATCH --job-name=PreprocessIsoseq3s-%A_%a.e
 #SBATCH --array=19-32%10 ## runs multiple jobs with 10 at any one time
 
-echo "Changing Folder to: "
-echo $SLURM_SUBMIT_DIR
+# this script needs to be submitted from the main repository folder
 
-cd $SLURM_SUBMIT_DIR
-
-module load Miniconda2
-source activate isoseq
 source ./Config/config.txt
-
-## output version of ccs
-ccs --version
-## output version of lima
-lima --version
 
 echo "Changing Folder to: "
 echo $DATADIR
-
-
 cd $DATADIR/
-
 
 ## this command can be used to process all relevant files in DATADIR 
 ## if only a subset need to be processed provide list in FilesToProcess.txt and hash out line below.
@@ -43,12 +30,37 @@ echo "Samples to process: " ${#samples[@]}
 sample=${samples[${SLURM_ARRAY_TASK_ID}]}
 
 
-## run first steps on each sample individually
+## run first steps on each smrt cell individually
 mkdir -p ${PROCESSEDDIR}/CCS
 mkdir -p ${PROCESSEDDIR}/Lima
 mkdir -p ${PROCESSEDDIR}/Refine
+mkdir -p ${PROCESSEDDIR}/Cluster
+mkdir -p ${PROCESSEDDIR}/Polish
+
 
 echo "Changing Folder to: "
 echo ${SCRIPTSDIR}/IsoSeqPipeline
 cd ${SCRIPTSDIR}/IsoSeqPipeline
-sh ./ProcessIsoSeqFiles.sh ${sample}
+
+
+module load Miniconda2
+source activate isoseq
+
+## output version of ccs
+ccs --version
+## output version of lima
+lima --version
+sh ./processIsoSeqSMRTcells.sh ${sample}
+
+module load minimap2
+sh ./alignIsoSeqSMRTcells.sh ${sample}
+
+
+module purge
+module load Miniconda2
+source activate anaCogent
+
+mkdir -p ${ALIGNEDDIR}/Collapsed/
+
+
+sh ./filterIsoSeqSMRTcells.sh ${sample}
