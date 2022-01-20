@@ -7,16 +7,20 @@
 
 p=$1
 basename=${p%.subreads.bam}
-echo "Aligning " ${basename}
+echo "Post alignment filtering " ${basename}
 
 ## create output folder for this sample
 mkdir -p ${ALIGNEDDIR}/Collapsed/${basename}/
 
-## need to unzip fq.gz files
-gunzip ${PROCESSEDDIR}/Polish/${basename}.hq.f*q.gz
+## may need to unzip fq.gz files
+if [ -f ${PROCESSEDDIR}/Polish/polished_${basename}.hq.f*q.gz ] ## if final output file doesn't exist, run it through this loop
+  then
+  gunzip ${PROCESSEDDIR}/Polish/polished_${basename}.hq.f*q.gz
+fi
+
 
 ## collapse redundant isoforms
-collapse_isoforms_by_sam.py --input ${PROCESSEDDIR}/Polish/*${basename}*.hq*q --fq \
+collapse_isoforms_by_sam.py --input ${PROCESSEDDIR}/Polish/polished_${basename}.hq*q --fq \
     -s ${ALIGNEDDIR}/${basename}.hq_isoforms.sorted.sam --dun-merge-5-shorter -o ${ALIGNEDDIR}/Collapsed/${basename}/out
 	   
 ## generate counts

@@ -10,7 +10,7 @@
 #SBATCH --output=LogFiles/PreprocessIsoseq3s-%A_%a.o
 #SBATCH --error=LogFiles/PreprocessIsoseq3s-%A_%a.e
 #SBATCH --job-name=PreprocessIsoseq3s-%A_%a.e
-#SBATCH --array=19-32%10 ## runs multiple jobs with 10 at any one time
+#SBATCH --array=0-32%10 ## runs multiple jobs with 10 at any one time
 
 # this script needs to be submitted from the main repository folder
 

@@ -9,7 +9,7 @@ p=$1
 basename=${p%.subreads.bam}
 echo "Aligning " ${basename}
 
-minimap2 -ax splice -t 30 -uf --secondary=no -C5 ${REFGENOME} ${PROCESSEDDIR}/Polish/${basename}.hq.fastq.gz > ${ALIGNEDDIR}/${basename}.hq_isoforms.sam
+minimap2 -ax splice -t 30 -uf --secondary=no -C5 ${REFGENOME} ${PROCESSEDDIR}/Polish/polished_${basename}.hq.fastq.gz > ${ALIGNEDDIR}/${basename}.hq_isoforms.sam
 
 sort -k 3,3 -k 4,4n ${ALIGNEDDIR}/${basename}.hq_isoforms.sam > ${ALIGNEDDIR}/${basename}.hq_isoforms.sorted.sam
 	
