@@ -12,33 +12,21 @@
 #SBATCH --job-name=alignSRBrain-%A_%a.e
 #SBATCH --array=0-49%10 ## runs 50 jobs with 10 at any one time
 
-
-module load STAR
-
-## needs to be executed from the scripts folder
-echo "Changing Folder to: "
-echo $SLURM_SUBMIT_DIR
-
-cd $SLURM_SUBMIT_DIR
-
 ## load config file
 echo "Loading config file: "
 source ./Config/config.txt
 
-cd ${RNASeqDIR}
+RNASEQDIR=$1
+PROJECT=$2
+GENECOUNTDIR=${GENECOUNTPATH}/${PROJECT}
 
-FQFILES=($(find . -name '*[rR]1*q.gz' -not -path "./Trimmed/*"))
+mkdir -p ${GENECOUNTDIR}
 
-echo "Number of R1 .fq.gz files found for alignment:"" ""${#FQFILES[@]}"""	
-
+FQFILES=($(find ${RNASEQDIR} -maxdepth 1 -name '*[rR]1*q.gz' ))
 sample=${FQFILES[${SLURM_ARRAY_TASK_ID}]}
-sampleName=$(basename ${sample%_[GCTA]*})
+sampleName=$(basename ${sample%[rR]1*})
 
-cd ${SCRIPTSDIR}
-
-## align to MergedTranscriptome
-#sh RNASeq/alignShortReadCortexTranscriptome.sh ${sampleName}
-
+module load STAR
 module load RSEM
-## gene & isofrom counts for to MergedTranscriptome
-sh RNASeq/rsemBrainTranscriptome.sh ${sampleName}
+## gene and isoform counts for GENCODE transcripts
+sh Scripts/RNASeq/rsemBrainTranscriptome.sh ${sampleName} ${RNASEQDIR} ${GENECOUNTDIR}

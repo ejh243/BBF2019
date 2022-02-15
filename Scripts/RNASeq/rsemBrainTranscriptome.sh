@@ -1,20 +1,19 @@
-sampleName=$1
+
 BRAINGTF=${MASTERTRANSCRIPTOME}/TALON/pfc_merge_smrt_talon_observedOnly.gtf
-	
 
+sampleName=$1
+RNASEQDIR=$2
+GENECOUNTSDIR=$3
 
-cd ${RNASeqDIR}
-TRIMFOLDER=Trimmed
+TRIMDIR=trimmed
 
-star_f1=$(ls ${TRIMFOLDER}/${sampleName}_*[rR]1*f*z)
-star_f2=$(ls ${TRIMFOLDER}/${sampleName}_*[rR]2*f*z)
+cd ${RNASEQDIR}
 
-nCPUS=$(($SLURM_CPUS_ON_NODE * $SLURM_CPUS_ON_NODE))
-
-mkdir -p ${RSEMREFDIR}/talon_merged/talon_merged
-#rsem-prepare-reference --gtf ${BRAINGTF} --star ${REFGENOME} ${RSEMREFDIR}/talon_merged/talon_merged
+star_f1=$(ls ${TRIMDIR}/${sampleName}*[rR]1*f*z)
+star_f2=$(ls ${TRIMDIR}/${sampleName}*[rR]2*f*z)
 
 mkdir -p ${GENECOUNTSDIR}/RSEM/MergedTranscriptome/
 
-rsem-calculate-expression --star --star-gzipped-read-file --paired-end ${star_f1} ${star_f2} ${RSEMREFDIR}/talon_merged/talon_merged ${GENECOUNTSDIR}/RSEM/MergedTranscriptome/talon_merged_lbb_${sampleName}
+nCPUS=$(($SLURM_CPUS_ON_NODE * $SLURM_CPUS_ON_NODE))
 
+rsem-calculate-expression -p ${nCPUS} --star --star-gzipped-read-file --paired-end ${star_f1} ${star_f2} ${RSEMREFDIR}/talon_merged/talon_merged ${GENECOUNTSDIR}/RSEM/MergedTranscriptome/brainMasterGTF_${sampleName}

@@ -10,7 +10,7 @@
 #SBATCH --output=LogFiles/PreprocessIsoseq3s-%A_%a.o
 #SBATCH --error=LogFiles/PreprocessIsoseq3s-%A_%a.e
 #SBATCH --job-name=PreprocessIsoseq3s-%A_%a.e
-#SBATCH --array=0-32%10 ## runs multiple jobs with 10 at any one time
+#SBATCH --array=0-33%10 ## runs multiple jobs with 10 at any one time
 
 # this script needs to be submitted from the main repository folder
 
@@ -50,10 +50,10 @@ source activate isoseq
 ccs --version
 ## output version of lima
 lima --version
-#sh ./processIsoSeqSMRTcells.sh ${sample}
+sh ./processIsoSeqSMRTcells.sh ${sample}
 
 module load minimap2
-#sh ./alignIsoSeqSMRTcells.sh ${sample}
+sh ./alignIsoSeqSMRTcells.sh ${sample}
 
 
 module purge
@@ -63,7 +63,7 @@ source activate anaCogent
 mkdir -p ${ALIGNEDDIR}/Collapsed/
 
 
-#sh ./filterIsoSeqSMRTcells.sh ${sample}
+sh ./filterIsoSeqSMRTcells.sh ${sample}
 module purge
 module load STAR
 module load RSEM

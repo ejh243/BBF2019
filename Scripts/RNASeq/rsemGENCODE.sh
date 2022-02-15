@@ -1,16 +1,19 @@
+
 sampleName=$1
+RNASEQDIR=$2
+GENECOUNTSDIR=$3
+
+TRIMDIR=trimmed
 
 
-cd ${RNASeqDIR}
-TRIMFOLDER=Trimmed
+cd ${RNASEQDIR}
 
-star_f1=$(ls ${TRIMFOLDER}/${sampleName}_*[rR]1*f*z)
-star_f2=$(ls ${TRIMFOLDER}/${sampleName}_*[rR]2*f*z)
+
+star_f1=$(ls ${TRIMDIR}/${sampleName}*[rR]1*f*z)
+star_f2=$(ls ${TRIMDIR}/${sampleName}*[rR]2*f*z)
 
 nCPUS=$(($SLURM_CPUS_ON_NODE * $SLURM_CPUS_ON_NODE))
 
-#mkdir ${RSEMREFDIR}/GENCODEv38/
-#rsem-prepare-reference --gtf ${GENCODEGTF} --star ${REFGENOME} ${RSEMREFDIR}/GENCODEv38/GENCODEv38
 
 mkdir -p ${GENECOUNTSDIR}/RSEM/GENCODE/
 

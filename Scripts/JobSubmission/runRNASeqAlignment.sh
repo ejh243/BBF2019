@@ -9,36 +9,42 @@
 #SBATCH --mail-user=e.j.hannon@exeter.ac.uk # email me at job completion
 #SBATCH --output=LogFiles/alignShortRead-%A_%a.o
 #SBATCH --error=LogFiles/alignShortRead-%A_%a.e
-#SBATCH --job-name=GENCODELBB-%A_%a.e
-#SBATCH --array=0-49%10 ## runs 50 jobs with 10 at any one time
+#SBATCH --job-name=alignShortRead-%A_%a.e
 
 
 module load STAR
-
-## needs to be executed from the scripts folder
-echo "Changing Folder to: "
-echo $SLURM_SUBMIT_DIR
-
-cd $SLURM_SUBMIT_DIR
 
 ## load config file provided on command line when submitting job
 echo "Loading config file: "
 source ./Config/config.txt
 
-cd ${RNASeqDIR}
+RNASEQDIR=$1
+PROJECT=$2
+ALIGNEDDIR=${ALIGNEDPATH}/${PROJECT}
+GENECOUNTDIR=${GENECOUNTPATH}/${PROJECT}
+QCDIR=${ALIGNEDDIR}/rnaseqc
 
-FQFILES=($(find . -name '*[rR]1*q.gz' -not -path "./Trimmed/*"))
+mkdir -p ${ALIGNEDDIR}
+mkdir -p ${GENECOUNTDIR}
+mkdir -p ${QCDIR}
+
+FQFILES=($(find ${RNASEQDIR} -maxdepth 1 -name '*[rR]1*q.gz' ))
 
 echo "Number of R1 .fq.gz files found for alignment:"" ""${#FQFILES[@]}"""	
 
 sample=${FQFILES[${SLURM_ARRAY_TASK_ID}]}
-sampleName=$(basename ${sample%_[GCTA]*})
+sampleName=$(basename ${sample%[rR]1*})
 
-cd ${SCRIPTSDIR}
 ## align to gencode
-#sh RNASeq/alignShortReadData.sh ${sampleName}
+sh Scripts/RNASeq/alignShortReadData.sh ${sampleName} ${RNASEQDIR} ${ALIGNEDDIR}
 
 module load RSEM
-
 ## gene and isoform counts for GENCODE transcripts
-sh RNASeq/rsemGENCODE.sh ${sampleName}
+sh Scripts/RNASeq/rsemGENCODE.sh ${sampleName} ${RNASEQDIR} ${GENECOUNTDIR}
+
+## 
+module load Miniconda2
+source ./Config/config.txt
+source activate rnaseqc
+
+sh Scripts/RNASeq/rnaseqQC.sh ${sampleName} ${ALIGNEDDIR} ${QCDIR}

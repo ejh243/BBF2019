@@ -48,17 +48,19 @@ if [ ! -f ${PROCESSEDDIR}/Cluster/clustered_${basename}.bam ] ## if final output
   then
   echo "File not found - Clustering "
 
-	isoseq3 cluster ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster/clustered_${basename}.bam --verbose --use-qvs --log-file ${PROCESSEDDIR}/Cluster/merge_${basename}.log
+	isoseq3 cluster ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster/clustered_${basename}.bam --verbose --use-qvs --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_${basename}.log
   
 else
 		echo "File Found - skipping clustering"
 fi
 
-if [ ! -f ${PROCESSEDDIR}/Polish/polished_${basename}.bam ] ## if final output file doesn't exist, run it through this loop
+if [ ! -f ${PROCESSEDDIR}/Polish/polished_${basename}.singletons.bam ] ## if final output file doesn't exist, run it through this loop
   then
   echo "File not found - Polishing " 
 
 	isoseq3 polish ${PROCESSEDDIR}/Cluster/clustered_${basename}.bam ${DATADIR}/${basename}*.subreadset.xml ${PROCESSEDDIR}/Polish/polished_${basename}.bam
+	
+	isoseq3 polish ${PROCESSEDDIR}/Cluster/clustered_${basename}.singletons.bam ${DATADIR}/${basename}*.subreadset.xml ${PROCESSEDDIR}/Polish/polished_${basename}.singletons.bam
 
 else
 	echo "File Found - skipping polishing"
