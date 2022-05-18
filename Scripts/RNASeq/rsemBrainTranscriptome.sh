@@ -16,4 +16,4 @@ mkdir -p ${GENECOUNTSDIR}/RSEM/MergedTranscriptome/
 
 nCPUS=$(($SLURM_CPUS_ON_NODE * $SLURM_CPUS_ON_NODE))
 
-rsem-calculate-expression -p ${nCPUS} --star --star-gzipped-read-file --paired-end ${star_f1} ${star_f2} ${RSEMREFDIR}/talon_merged/talon_merged ${GENECOUNTSDIR}/RSEM/MergedTranscriptome/brainMasterGTF_${sampleName}
+rsem-calculate-expression --star --star-gzipped-read-file --paired-end ${star_f1} ${star_f2} ${RSEMREFDIR}/talon_merged/talon_merged ${GENECOUNTSDIR}/RSEM/MergedTranscriptome/brainMasterGTF_${sampleName}

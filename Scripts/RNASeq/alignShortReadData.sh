@@ -21,7 +21,7 @@ echo ${f2}
 module load FastQC
 mkdir -p ${FASTQCDIR}
 
-fastqc ${f1} ${f2} --outdir=${FASTQCDIR}
+#fastqc ${f1} ${f2} --outdir=${FASTQCDIR}
 
 
 ## trimmomatic
@@ -30,7 +30,7 @@ module load Trim_Galore/0.4.5-foss-2016b
 
 mkdir -p ${TRIMDIR}
 
-if [[ ! -f ${TRIMDIR}/${sampleName}*[rR]1*_val_1*f*z ]] && [[ ! -f ${TRIMDIR}/${sampleName}_*[rR]2*_val_2*f*z ]]
+if [[ ! -f ${TRIMDIR}/${sampleName}*[rR]1*_val_1*f*z ]] && [[ ! -f ${TRIMDIR}/${sampleName}*[rR]2*_val_2*f*z ]]
 then	
 	echo "trimming" ${f1}
 	## trim reads
