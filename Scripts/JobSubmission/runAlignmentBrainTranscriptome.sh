@@ -6,11 +6,10 @@
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
 #SBATCH --mail-type=END # send email at job completion 
-#SBATCH --mail-user=e.j.hannon@exeter.ac.uk # email me at job completion
 #SBATCH --output=LogFiles/alignSRBrain-%A_%a.o
 #SBATCH --error=LogFiles/alignSRBrain-%A_%a.e
 #SBATCH --job-name=alignSRBrain-%A_%a.e
-#SBATCH --array=0-49%10 ## runs 50 jobs with 10 at any one time
+
 
 ## load config file
 echo "Loading config file: "
@@ -18,6 +17,7 @@ source ./Config/config.txt
 
 RNASEQDIR=$1
 PROJECT=$2
+ALIGNEDDIR=${ALIGNEDPATH}/${PROJECT}
 GENECOUNTDIR=${GENECOUNTPATH}/${PROJECT}
 
 mkdir -p ${GENECOUNTDIR}
@@ -28,5 +28,10 @@ sampleName=$(basename ${sample%[rR]1*})
 
 module load STAR
 module load RSEM
-## gene and isoform counts for GENCODE transcripts
+## align with brain transcriptome
+sh Scripts/RNASeq/alignShortReadBrainTranscriptome.sh ${sampleName} ${RNASEQDIR} ${ALIGNEDDIR}
+
+## gene and isoform counts for Brain transcripts
 sh Scripts/RNASeq/rsemBrainTranscriptome.sh ${sampleName} ${RNASEQDIR} ${GENECOUNTDIR}
+
+

@@ -20,7 +20,7 @@ fi
 
 
 ## collapse redundant isoforms
-collapse_isoforms_by_sam.py --input ${PROCESSEDDIR}/Polish/polished_${basename}.hq*q --fq \
+collapse_isoforms_by_sam.py --input ${PROCESSEDDIR}/Polish/polished_${basename}.hq*q --fq -c 0.85 \
     -s ${ALIGNEDDIR}/${basename}.hq_isoforms.sorted.sam --dun-merge-5-shorter -o ${ALIGNEDDIR}/Collapsed/${basename}/out
 	   
 ## generate counts

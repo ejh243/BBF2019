@@ -14,7 +14,7 @@ python ${SOFTWAREPATH}/SQANTI3/sqanti3_qc.py ${ALIGNEDDIR}/Collapsed/${basename}
    --polyA_motif_list ${SQANTIDATA}/polyA_motifs/mouse_and_human.polyA_motif.txt    \
    -fl ${ALIGNEDDIR}/Collapsed/${basename}/out.collapsed.filtered.abundance.txt    \
    --isoAnnotLite --saturation \
-   --expression $(ls -m ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${basename}/*.isoforms.results | tr -d '\n')    \
+   --expression $(ls -m ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/*.isoforms.results | tr -d '\n')    \
    -c $(ls -m ${RSEMREFDIR}/${basename}/*SJ.out.tab | tr -d '\n') \
    --cpus 4 --report pdf 
   
@@ -26,3 +26,7 @@ python ${SOFTWAREPATH}/SQANTI3/sqanti3_RulesFilter.py -c 0 \
    ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta    \
    ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.gtf
 
+python ${SOFTWAREPATH}/SQANTI3/sqanti3_filter.py ML  \
+   --gtf ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.gtf  \
+   --isoforms ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta \
+   ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.txt

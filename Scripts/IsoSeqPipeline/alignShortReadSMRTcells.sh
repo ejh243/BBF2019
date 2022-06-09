@@ -55,9 +55,10 @@ do
             --outSAMheaderHD \@HD VN:1.4 SO:unsorted \
             --limitOutSJcollapsed 2000000 
         
-        #rm ${RSEMREFDIR}/${basename}/${basename}Aligned.out.bam
         
-        rsem-calculate-expression --num-threads 10 --alignments ${RSEMREFDIR}/${basename}/${basename}.${rnaID}Aligned.toTranscriptome.out.bam ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
+        
+        rsem-calculate-expression --num-threads 10 --alignments ${RSEMREFDIR}/${basename}/${basename}.${rnaID}Aligned.toTranscriptome.out.bam ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
+        rm ${RSEMREFDIR}/${basename}/${basename}Aligned.out.bam
     fi
 done
 

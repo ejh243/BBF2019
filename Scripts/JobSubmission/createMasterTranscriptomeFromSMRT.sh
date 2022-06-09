@@ -54,7 +54,7 @@ source activate talon
 # initializing the database
 
 talon_initialize_database --f ${GENCODEGTF}\
-    --g hg38 --a gencode38 --o pfc_merge_smrt
+    --g hg38 --a gencode38 --o pfc_merge_smrt_all
 
 # internal priming check
 
@@ -83,44 +83,39 @@ done
 ## add samples to the database
 ## nb if existing database checks if samples already present and does not re add them.
 talon --f InputSAM/config.smrt.csv \
-    --db pfc_merge_smrt.db \
+    --db pfc_merge_smrt_all.db \
     --build hg38 \
     --t 30 \
     --cov 0.95 \
     --identity 0.95 \
-    --o pfc_merge_smrt
+    --o pfc_merge_smrt_all
     
     
 
 talon_filter_transcripts \
-    --db pfc_merge_smrt.db \
+    --db pfc_merge_smrt_all.db \
     -a gencode38 \
     --minCount=2 --minDatasets=1 --maxFracA=1\
     --o=pfc_merge_filter.txt
 
-## read in isoforms with junction support coverage
-## need to do sample by sample and look up new talon id
-awk '{ if ($17 == "non_canonical" && $19 > 3) print $1,$17,$19 }' ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.filtered_lite_classification.txt
-
-grep ${basename}"/lustre/projects/Research_Project-193495/MasterTranscriptome/TALON/pfc_merge_smrt_talon_read_annot.tsv" | grep PB.1008.2
 
     
 ## summarise transcript numbers
 talon_summarize \
-    --db pfc_merge_smrt.db \
+    --db pfc_merge_smrt_all.db \
     --v \
-    --o pfc_merge_smrt
+    --o pfc_merge_smrt_all
 
 ## create an abundance matrix
 talon_abundance \
-    --db pfc_merge_smrt.db \
+    --db pfc_merge_smrt_all.db \
     -a gencode38 \
     --build hg38 \
     --whitelist=pfc_merge_filter.txt \
     --o pfc_merge_filter
 
 ## create gtf
-talon_create_GTF --db=pfc_merge_smrt.db \
+talon_create_GTF --db=pfc_merge_smrt_all.db \
     --annot=gencode38 \
     -b hg38 \
     --observed \
