@@ -27,16 +27,17 @@ do
     
     echo "Aligning short read data for sample " ${rnaID}
     
-    mkdir -p ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
+	mkdir -p ${ALIGNEDDIR}/SMRTcells/${basename}
+    mkdir -p ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
     
-    if [ ! -f ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${basename}/${rnaID}.isoforms.results ]
+    if [ ! -f ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}.isoforms.results ]
     then
         #rsem-calculate-expression --star --star-gzipped-read-file --paired-end ${star_f1} ${star_f2} ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${basename}
     
         ## align with STAR 
         STAR --genomeDir ${RSEMREFDIR}/${basename}/ --runThreadN 18 --readFilesIn ${star_f1},${star_f2} \
             --readFilesCommand zcat \
-            --outFileNamePrefix ${RSEMREFDIR}/${basename}/${basename}.${rnaID} \
+            --outFileNamePrefix ${ALIGNEDDIR}/SMRTcells/${basename}/${basename}.${rnaID} \
             --outSAMtype BAM Unsorted \
             --outSAMunmapped Within \
             --outSAMattributes  NH HI AS NM MD \
@@ -57,8 +58,8 @@ do
         
         
         
-        rsem-calculate-expression --num-threads 10 --alignments ${RSEMREFDIR}/${basename}/${basename}.${rnaID}Aligned.toTranscriptome.out.bam ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
-        rm ${RSEMREFDIR}/${basename}/${basename}Aligned.out.bam
+        rsem-calculate-expression --num-threads 10 --alignments ${ALIGNEDDIR}/SMRTcells/${basename}/${basename}.${rnaID}Aligned.toTranscriptome.out.bam ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
+        rm ${ALIGNEDDIR}/SMRTcells/${basename}/${basename}.${rnaID}Aligned.out.bam
     fi
 done
 

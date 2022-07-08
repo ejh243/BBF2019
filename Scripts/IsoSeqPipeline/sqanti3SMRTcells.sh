@@ -15,7 +15,7 @@ python ${SOFTWAREPATH}/SQANTI3/sqanti3_qc.py ${ALIGNEDDIR}/Collapsed/${basename}
    -fl ${ALIGNEDDIR}/Collapsed/${basename}/out.collapsed.filtered.abundance.txt    \
    --isoAnnotLite --saturation \
    --expression $(ls -m ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/*.isoforms.results | tr -d '\n')    \
-   -c $(ls -m ${RSEMREFDIR}/${basename}/*SJ.out.tab | tr -d '\n') \
+   -c $(ls -m ${ALIGNEDDIR}/SMRTcells/${basename}/*SJ.out.tab | tr -d '\n') \
    --cpus 4 --report pdf 
   
 			 
