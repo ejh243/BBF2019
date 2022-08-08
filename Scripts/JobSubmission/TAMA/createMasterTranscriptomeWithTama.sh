@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p mrcq # submit to the serial queue
-#SBATCH --time=48:00:00 # Maximum wall time for the job.
+#SBATCH --time=250:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-MRC190311 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
@@ -33,6 +33,9 @@ python ${SOFTWAREPATH}/tama/tama_go/read_support/tama_read_support_levels.py -f 
 cd ${MASTERTRANSCRIPTOME}/TAMA/
 python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_single_read_models_levels.py -b pfc_merge_smrt_all.bed -r pfc_merge_smrt_all_counts_read_support.txt -o pfc_merge_smrt_all_nRead2
 
+# create new read abundance file with correct IDs
+awk '{if ($6 != "removed_transcript") print $5,$6,$7,$3,$4}' pfc_merge_smrt_all_nRead2_singleton_report.txt > pfc_merge_smrt_all_nRead2_counts.txt
+
 # remove transcripts that may be fragments of longer transcripts
 python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_fragment_models.py -f pfc_merge_smrt_all_nRead2.bed -o pfc_merge_smrt_all_nRead2_filtFrag
 
@@ -40,8 +43,23 @@ python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_fragmen
 python ${SOFTWAREPATH}/tama/tama_go/format_converter/tama_convert_bed_gtf_ensembl_no_cds.py pfc_merge_smrt_all_nRead2_filtFrag.bed pfc_merge_smrt_all_nRead2_filtFrag.gtf
 
 
+
+GFF=${MASTERTRANSCRIPTOME}/TAMA/pfc_merge_smrt_all_nRead2_filtFrag.gtf
+
 module purge
 module load STAR
 module load RSEM
 
-sh ${SCRIPTSDIR}/tamaPipeline/alignShortRead.sh
+## prepare RSEM ref for quantification
+mkdir -p ${RSEMREFDIR}/BrainTAMAPre/
+rsem-prepare-reference --gtf ${GFF} ${REFGENOME} ${RSEMREFDIR}/BrainTAMAPre/BrainTAMAPre
+
+# run STAR command with bespoke parameters
+mkdir -p ${STARINDEXDIR}/BrainTAMAPre
+STAR --runThreadN 8 \
+--runMode genomeGenerate \
+--genomeDir ${STARINDEXDIR}/BrainTAMAPre \
+--genomeFastaFiles ${REFGENOME} \
+--sjdbGTFfile ${GFF} \
+--sjdbOverhang 99 --limitSjdbInsertNsj 1091177
+

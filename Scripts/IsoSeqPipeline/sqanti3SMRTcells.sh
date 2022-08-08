@@ -21,12 +21,17 @@ python ${SOFTWAREPATH}/SQANTI3/sqanti3_qc.py ${ALIGNEDDIR}/Collapsed/${basename}
 			 
 ## filter gtf based on sqanti classification
 ## don't filter on coverage at this point 
-python ${SOFTWAREPATH}/SQANTI3/sqanti3_RulesFilter.py -c 0 \
-   ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.txt    \
-   ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta    \
-   ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.gtf
+python ${SOFTWAREPATH}/SQANTI3/sqanti3_filter.py rules	   \
+   --gtf ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.gtf   \
+   --isoforms ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta   \
+   -d ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/   \
+   -o ${basename}   \
+   ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.txt
+
 
 python ${SOFTWAREPATH}/SQANTI3/sqanti3_filter.py ML  \
    --gtf ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.gtf  \
-   --isoforms ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta \
+   --isoforms ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta   \
+   -d ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/   \
+   -o ${basename}   \
    ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.txt

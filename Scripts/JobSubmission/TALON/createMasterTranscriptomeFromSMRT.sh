@@ -22,7 +22,7 @@ source ./Config/config.txt
 ## recommended for moderate-to-large (ex: >4) sample merging where a reference transcriptome readily exists
 
 # making MD-tagged SAM files for each sample
-FASTAFILES=($(ls  ${ALIGNEDDIR}/Collapsed/m*/SQANTI3/*_classification.filtered_lite.fasta))
+FASTAFILES=($(ls  ${ALIGNEDDIR}/Collapsed/m*/SQANTI3/*.filtered.fasta))
 
 mkdir -p ${MASTERTRANSCRIPTOME}/TALON
 cd ${MASTERTRANSCRIPTOME}/TALON
@@ -31,7 +31,7 @@ mkdir -p InputSAM
 for fasta in ${FASTAFILES[@]}
 do
     sampleName=$(basename ${fasta})
-    sampleName=${sampleName%_classification.filtered_lite.fasta}
+    sampleName=${sampleName%.filtered.fasta}
     
     # align to ref genome
     minimap2 -ax splice -uf --secondary=no -C5 ${REFGENOME} -t30 \
@@ -65,7 +65,7 @@ echo -n InputSAM/config.smrt.csv
 for fasta in ${FASTAFILES[@]}
 do
     sampleName=$(basename ${fasta})
-    sampleName=${sampleName%_classification.filtered_lite.fasta}
+    sampleName=${sampleName%.filtered.fasta}
     
     talon_label_reads --f InputSAM/${sampleName}.collapsed.rep.fa.hg38.MDtagged.sam \
         --g ${REFGENOME}  \
