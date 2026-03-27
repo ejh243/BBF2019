@@ -12,6 +12,7 @@
 #SBATCH --job-name=QCtamaTranscriptome
 
 
+source ./Config/config.txt
 module purge
 module load Miniconda2
 source activate SQANTI3.env

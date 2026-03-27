@@ -7,10 +7,10 @@
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=e.j.hannon@exeter.ac.uk # email me at job completion
-#SBATCH --output=LogFiles/alignSRTama.o
-#SBATCH --error=LogFiles/alignSRTama.e
-#SBATCH --job-name=alignSRTama
-#SBATCH --array=0-34%10 ## runs multiple jobs with 10 at any one time
+#SBATCH --output=LogFiles/alignSRTama-%A_%a.o
+#SBATCH --error=LogFiles/alignSRTama-%A_%a.e
+#SBATCH --job-name=alignSRTama-%A_%a
+#SBATCH --array=0 ## runs multiple jobs with 10 at any one time
 
 # this script needs to be submitted from the main repository folder
 

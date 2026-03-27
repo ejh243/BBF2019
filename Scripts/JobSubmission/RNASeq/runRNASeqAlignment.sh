@@ -1,15 +1,15 @@
 #!/bin/sh
 #SBATCH --export=ALL # export all environment variables to the batch job.
-#SBATCH -p mrcq # submit to the serial queue
+#SBATCH -p sq # submit to the serial queue
 #SBATCH --time=24:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-MRC190311 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=e.j.hannon@exeter.ac.uk # email me at job completion
-#SBATCH --output=LogFiles/alignShortRead-%A_%a.o
-#SBATCH --error=LogFiles/alignShortRead-%A_%a.e
-#SBATCH --job-name=alignShortRead-%A_%a.e
+#SBATCH --output=LogFiles/alignGENCODE-%A_%a.o
+#SBATCH --error=LogFiles/alignGENCODE-%A_%a.e
+#SBATCH --job-name=alignGENCODE-%A_%a.e
 
 
 module load STAR
@@ -28,7 +28,7 @@ mkdir -p ${ALIGNEDDIR}
 mkdir -p ${GENECOUNTDIR}
 mkdir -p ${QCDIR}
 
-FQFILES=($(find ${RNASEQDIR} -maxdepth 1 -name '*[rR]1*q.gz' ))
+FQFILES=($(find ${RNASEQDIR} -maxdepth 1 -name '*[rR]1.*q.gz' ))
 
 echo "Number of R1 .fq.gz files found for alignment:"" ""${#FQFILES[@]}"""	
 
@@ -43,8 +43,8 @@ module load RSEM
 sh Scripts/RNASeq/rsemGENCODE.sh ${sampleName} ${RNASEQDIR} ${GENECOUNTDIR}
 
 ## 
+module purge
 module load Miniconda2
-source ./Config/config.txt
 source activate rnaseqc
 
 sh Scripts/RNASeq/rnaseqQC.sh ${sampleName} ${ALIGNEDDIR} ${QCDIR}

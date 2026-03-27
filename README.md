@@ -50,8 +50,15 @@ project
            └───multiqc_data           
                      
 └───GeneCounts
-    │   file021.txt
-    │   file022.txt 
+  │
+  └───Project1
+    └───RSEM
+      └───GENCODE
+        │   sample1.isoforms.results
+        │   sample1.genes.results
+      └───BrainTAMAPost
+        │   sample1.isoforms.results
+        │   sample1.genes.results
 └───Scripts
     │   file021.txt
     │   file022.txt    
@@ -64,7 +71,7 @@ Details for running the isoseq pipeline
 
 Run the following commands from the github repository main folder
 
-## SMRT cell processing into master transcriptome
+## SMRT cell pre-processing
 
 1. sbatch Scripts/JobSubmission/batchProcessIsoSeqData.sh
 	searchs for all files with sufix .subreads.bam then executes the following scripts for each sample:
@@ -77,13 +84,33 @@ Run the following commands from the github repository main folder
 	
 2. smrt cell level qc summary
 
-3. sbatch Scripts/IsoSeqPipeline/createMasterTranscriptomeFromSMRTcells.sh
+## create master transcriptome with TALON
+
+1. sbatch Scripts/IsoSeqPipeline/createMasterTranscriptomeFromSMRTcells.sh
 	use talon to mark reads for internal priming and merge smrt cell transcriptomes into single master transcriptomes. Compare to GENCODE for annotation of known isoforms
 
-4. sbatch Scripts/IsoSeqPipeline/.sh
+2. sbatch Scripts/IsoSeqPipeline/.sh
 	use talon to annotate master transcriptome with 
 
-4. characterise transcriptome
+3. characterise transcriptome
+
+## create master transcriptome with TAMA
+
+1. sbatch Scripts/JobSubmission/batchProcessTamaPipeline.sh
+	preprocesses each smrt cell for use with tama by executing
+	* alignFLNC.sh aligns output of refine step (i.e. skips cluster and polishing steps)
+	* tamaCollapse.sh uses tama to collapse isoforms
+
+2. sbatch Scripts/JobSubmission/createMasterTranscriptomeWithTama.sh
+	use tama to merge smrt cells and perform some filtering
+	
+3. sbatch Scripts/JobSubmission/batchAlignSRTama.sh
+	align short read data to merged transcriptome for input to sqanti QC
+
+4. Scripts/JobSubmission/qcTamaTranscriptome.sh
+	use sqanti to characterise and filter isoforms
+
+
 
 ## RNA-Seq data pipeline
 
@@ -92,7 +119,7 @@ Run the following commands from the github repository main folder
 	* Scripts/RNASeq/rsemGENCODE.sh: quantify GENCODE transcripts with RSEM
 	* Scripts/RNASeq/rnaseqQC.sh: RNASEQ-QC
 	
-2. sbatch --array=0-49%10 Scripts/JobSubmission/runAlignmentBrainTranscriptome.sh <folder with fastq files> <Project Name>
+2. sbatch --array=<number of jobs> Scripts/JobSubmission/runAlignmentBrainTranscriptome.sh <folder with fastq files> <Project Name> <Transcriptome Name>
 	* Scripts/RNASeq/rsemBrainTranscriptome.sh: quantify Brain Transcriptome with RSEM
 	
 3. sbatch JobSubmission/featureCountsGENCODE.sh <Project Name>

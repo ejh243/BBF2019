@@ -8,8 +8,8 @@ basename=${p%.subreads.bam}
 echo "Aligning short read data to " ${basename} "transcriptome"
 
 ## find trimmed files
-all_f1=($(ls ${RNASeqDIR}Trimmed/*[rR]1*f*z))
-all_f2=($(ls ${RNASeqDIR}Trimmed/*[rR]2*f*z))
+all_f1=($(ls ${RNASeqDIR}trimmed/*[rR]1*f*z))
+all_f2=($(ls ${RNASeqDIR}trimmed/*[rR]2*f*z))
 
 
 GFF=${ALIGNEDDIR}/Collapsed/${basename}/out.collapsed.filtered.gff
@@ -25,7 +25,7 @@ do
     rnaID=$(basename ${star_f1})
     rnaID=${rnaID%%_*}
     
-    echo "Aligning short read data for sample " ${rnaID}
+    echo "Found short read data for sample " ${rnaID}
     
 	mkdir -p ${ALIGNEDDIR}/SMRTcells/${basename}
     mkdir -p ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
@@ -33,9 +33,9 @@ do
     if [ ! -f ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}.isoforms.results ]
     then
         #rsem-calculate-expression --star --star-gzipped-read-file --paired-end ${star_f1} ${star_f2} ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTSDIR}/RSEM/PersonalTranscriptome/${basename}
-    
+		echo "Aligning short read data for sample " ${rnaID}
         ## align with STAR 
-        STAR --genomeDir ${RSEMREFDIR}/${basename}/ --runThreadN 18 --readFilesIn ${star_f1},${star_f2} \
+        STAR --genomeDir ${RSEMREFDIR}/${basename} --runThreadN 18 --readFilesIn ${star_f1},${star_f2} \
             --readFilesCommand zcat \
             --outFileNamePrefix ${ALIGNEDDIR}/SMRTcells/${basename}/${basename}.${rnaID} \
             --outSAMtype BAM Unsorted \
@@ -55,9 +55,6 @@ do
             --quantMode TranscriptomeSAM  \
             --outSAMheaderHD \@HD VN:1.4 SO:unsorted \
             --limitOutSJcollapsed 2000000 
-        
-        
-        
         rsem-calculate-expression --num-threads 10 --alignments ${ALIGNEDDIR}/SMRTcells/${basename}/${basename}.${rnaID}Aligned.toTranscriptome.out.bam ${RSEMREFDIR}/${basename}/${basename} ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/${basename}/${rnaID}
         rm ${ALIGNEDDIR}/SMRTcells/${basename}/${basename}.${rnaID}Aligned.out.bam
     fi

@@ -48,6 +48,7 @@ mkdir -p ${GENECOUNTDIR}/RSEM/${TRANSCRIPTOME}
 
 if [ ! -f ${GENECOUNTDIR}/RSEM/${TRANSCRIPTOME}/${sampleName}.isoforms.results ]
 then
+	echo "isoform counting" ${star_f1}
 	rsem-calculate-expression --num-threads 10 --alignments ${ALIGNEDDIR}/${TRANSCRIPTOME}/${TRANSCRIPTOME}_${sampleName}Aligned.toTranscriptome.out.bam ${RSEMREFDIR}/${TRANSCRIPTOME}/${TRANSCRIPTOME} ${GENECOUNTDIR}/RSEM/${TRANSCRIPTOME}/${sampleName}
 	rm ${ALIGNEDDIR}/${TRANSCRIPTOME}/${TRANSCRIPTOME}_${sampleName}Aligned.out.bam
 fi

@@ -95,7 +95,7 @@ talon --f InputSAM/config.smrt.csv \
 talon_filter_transcripts \
     --db pfc_merge_smrt_all.db \
     -a gencode38 \
-    --minCount=2 --minDatasets=1 --maxFracA=1\
+    --minCount=1 --minDatasets=1 --maxFracA=1\
     --o=pfc_merge_filter.txt
 
 
@@ -107,12 +107,16 @@ talon_summarize \
     --o pfc_merge_smrt_all
 
 ## create an abundance matrix
-talon_abundance \
+#talon_abundance \
     --db pfc_merge_smrt_all.db \
     -a gencode38 \
     --build hg38 \
     --whitelist=pfc_merge_filter.txt \
     --o pfc_merge_filter
+
+## create an abundance matrix 
+
+python3 Utilities/flAbundanceforTalonDatabase.py pfc_merge_smrt_all_talon_read_annot.tsv ${ALIGNEDDIR}/Collapsed/ InputSAM/config.smrt.csv
 
 ## create gtf
 talon_create_GTF --db=pfc_merge_smrt_all.db \

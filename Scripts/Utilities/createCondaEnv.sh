@@ -35,3 +35,6 @@ pip install biopython
 python setup.py build
 python setup.py install
 
+conda create --name suppa python=3.4
+conda activate suppa
+conda install -c bioconda suppa

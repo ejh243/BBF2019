@@ -10,7 +10,6 @@
 #SBATCH --error=LogFiles/alignSRBrain-%A_%a.e
 #SBATCH --job-name=alignSRBrain-%A_%a.e
 
-
 ## load config file
 echo "Loading config file: "
 source ./Config/config.txt
@@ -20,6 +19,8 @@ PROJECT=$2
 TRANSCRIPTOME=$3
 ALIGNEDDIR=${ALIGNEDPATH}/${PROJECT}
 GENECOUNTDIR=${GENECOUNTPATH}/${PROJECT}
+
+echo "Aligning ", $PROJECT , " to ", $TRANSCRIPTOME
 
 mkdir -p ${GENECOUNTDIR}
 

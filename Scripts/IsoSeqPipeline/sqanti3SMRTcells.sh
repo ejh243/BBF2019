@@ -28,10 +28,3 @@ python ${SOFTWAREPATH}/SQANTI3/sqanti3_filter.py rules	   \
    -o ${basename}   \
    ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.txt
 
-
-python ${SOFTWAREPATH}/SQANTI3/sqanti3_filter.py ML  \
-   --gtf ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.gtf  \
-   --isoforms ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_corrected.fasta   \
-   -d ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/   \
-   -o ${basename}   \
-   ${ALIGNEDDIR}/Collapsed/${basename}/SQANTI3/${basename}_classification.txt

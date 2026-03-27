@@ -29,22 +29,21 @@ python ${SOFTWAREPATH}/tama/tama_merge.py -f smrtcells.txt -p ${MASTERTRANSCRIPT
 python ${SOFTWAREPATH}/tama/tama_go/read_support/tama_read_support_levels.py -f ${MASTERTRANSCRIPTOME}/TAMA/readSupport.txt -o ${MASTERTRANSCRIPTOME}/TAMA/pfc_merge_smrt_all_counts -m ${MASTERTRANSCRIPTOME}/TAMA/pfc_merge_smrt_all_merge.txt
 
 
-# filter singletons
+# filter singleton transcripts
 cd ${MASTERTRANSCRIPTOME}/TAMA/
-python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_single_read_models_levels.py -b pfc_merge_smrt_all.bed -r pfc_merge_smrt_all_counts_read_support.txt -o pfc_merge_smrt_all_nRead2
+python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_single_read_models_levels.py -b pfc_merge_smrt_all.bed -r pfc_merge_smrt_all_counts_read_support.txt -o pfc_merge_smrt_all_nSample2 -l transcript -k remove_multi -s 2 -n 1
 
 # create new read abundance file with correct IDs
-awk '{if ($6 != "removed_transcript") print $5,$6,$7,$3,$4}' pfc_merge_smrt_all_nRead2_singleton_report.txt > pfc_merge_smrt_all_nRead2_counts.txt
+awk '{if ($6 != "removed_transcript") print $5,$6,$7,$3,$4}' pfc_merge_smrt_all_nSample2_singleton_report.txt > pfc_merge_smrt_all_nSample2_counts.txt
 
 # remove transcripts that may be fragments of longer transcripts
-python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_fragment_models.py -f pfc_merge_smrt_all_nRead2.bed -o pfc_merge_smrt_all_nRead2_filtFrag
-
+python ${SOFTWAREPATH}/tama/tama_go/filter_transcript_models/tama_remove_fragment_models.py -f pfc_merge_smrt_all_nSample2.bed -o pfc_merge_smrt_all_nSample2_filtF
 # convert to gtf
-python ${SOFTWAREPATH}/tama/tama_go/format_converter/tama_convert_bed_gtf_ensembl_no_cds.py pfc_merge_smrt_all_nRead2_filtFrag.bed pfc_merge_smrt_all_nRead2_filtFrag.gtf
+python ${SOFTWAREPATH}/tama/tama_go/format_converter/tama_convert_bed_gtf_ensembl_no_cds.py pfc_merge_smrt_all_nSample2_filtFrag.bed pfc_merge_smrt_all_nSample2_filtFrag.gtf
 
 
 
-GFF=${MASTERTRANSCRIPTOME}/TAMA/pfc_merge_smrt_all_nRead2_filtFrag.gtf
+GFF=${MASTERTRANSCRIPTOME}/TAMA/pfc_merge_smrt_all_nSample2_filtFrag.gtf
 
 module purge
 module load STAR
