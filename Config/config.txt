@@ -1,7 +1,7 @@
 # Relevant file paths
 
 DATADIR="/lustre/home/vs455/isoseq_pipeline_test/raw_data"
-PROCESSDIR="/lustre/home/vs455/isoseq_pipeline_test/processed_data"
+PROCESSEDDIR="/lustre/home/vs455/isoseq_pipeline_test/processed_data"
 
 RESOURCESDIR="/lustre/projects/Research_Project-193495/Resources"  
 
