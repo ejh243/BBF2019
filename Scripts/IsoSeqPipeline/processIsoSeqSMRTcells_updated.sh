@@ -5,14 +5,19 @@
 ## do not store any sensitive data use config file to specify filepaths etc. 
 ## this script requires .subread.bam, .subreads.bam.pbi, and .subreadset.xml files are located in the DATADIR
 
-cd $DATADIR/
-
 p=$1
 
 echo "Processing " ${p}
+basename=$(basename "$p" .subreads.bam)
+echo "Basename: $basename"
 
-basename=${p%.subreads.bam}
-
+echo "Processing ${p}"
+echo "PWD: $(pwd)"
+echo "DATADIR: ${DATADIR}"
+echo "Input file: ${p}"
+echo "Basename: ${basename}"
+ls -lh "${p}"
+echo "Batch script DATADIR: ${DATADIR}"
 
 # Step 1: CCS - Generate circular consensus sequences (ccs) from subreads
 if [ ! -f ${PROCESSEDDIR}/CCS/${basename}.ccs.bam ] ## if final output file doesn't exist, run it through this loop
@@ -54,11 +59,11 @@ fi
 
 # Step 4: Cluster2 - Cluster FLNC reads and generate transcripts
 # Note - polish step not required in newer pipeline / cluster2 tool 
-if [ ! -f ${PROCESSEDDIR}/Cluster/clustered_${basename}.bam ] ## if final output file doesn't exist, run it through this loop
+if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam ] ## if final output file doesn't exist, run it through this loop
   then
   echo "File not found - Clustering "
 
-	isoseq cluster2 ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster/clustered_${basename}.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_${basename}.log
+	isoseq cluster2 ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_${basename}.log
   
 else
 		echo "File Found - skipping clustering"

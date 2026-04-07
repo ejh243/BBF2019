@@ -27,7 +27,7 @@ samples=($(ls *.subreads.bam))
 
 echo "Samples to process: " ${#samples[@]}
 
-sample=${samples[${SLURM_ARRAY_TASK_ID}]}
+sample=${DATADIR}/${samples[${SLURM_ARRAY_TASK_ID}]}
 
 
 ## run first steps on each smrt cell individually
@@ -51,7 +51,7 @@ isoseq --version
 ccs --version
 ## output version of lima
 lima --version
-sh ./processIsoSeqSMRTcells_updated.sh ${sample}
+bash ./processIsoSeqSMRTcells_updated.sh ${sample}
 
 #module load minimap2
 #sh ./alignIsoSeqSMRTcells.sh ${sample}
