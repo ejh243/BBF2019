@@ -13,7 +13,7 @@
 #SBATCH --array=0-34 ## runs multiple jobs with 10 at any one time
 
 # this script needs to be submitted from the main repository folder
-# Example Usage: bash Scripts/JobSubmission/TALON/batchProcessIsoSeqData_test.sh > ../isoseq_pipeline_test/logfiles/
+# Example Usage: bash Scripts/JobSubmission/TALON/batchProcessIsoSeqData_test.sh > ../isoseq_pipeline_test/logfiles/isoseq_test.log 2>&1 &
 
 source ./Config/config.txt
 
@@ -28,7 +28,7 @@ samples=($(ls *.subreads.bam))
 
 echo "Samples to process: " ${#samples[@]}
 
-sample=${samples[${SLURM_ARRAY_TASK_ID}]}
+sample=${DATADIR}/${samples[${SLURM_ARRAY_TASK_ID}]}
 
 ## run first steps on each smrt cell individually
 mkdir -p ${PROCESSEDDIR}/CCS
