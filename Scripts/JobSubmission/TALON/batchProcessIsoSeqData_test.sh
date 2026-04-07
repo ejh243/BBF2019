@@ -6,7 +6,7 @@
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
 #SBATCH --mail-type=END # send email at job completion 
-#SBATCH --mail-user=e.j.hannon@exeter.ac.uk # email me at job completion
+#SBATCH --mail-user=v.suresh@exeter.ac.uk # email me at job completion
 #SBATCH --output=LogFiles/PreprocessIsoseq3s-%A_%a.o
 #SBATCH --error=LogFiles/PreprocessIsoseq3s-%A_%a.e
 #SBATCH --job-name=PreprocessIsoseq3s-%A_%a.e
@@ -34,8 +34,7 @@ sample=${samples[${SLURM_ARRAY_TASK_ID}]}
 mkdir -p ${PROCESSEDDIR}/CCS
 mkdir -p ${PROCESSEDDIR}/Lima
 mkdir -p ${PROCESSEDDIR}/Refine
-mkdir -p ${PROCESSEDDIR}/Cluster
-mkdir -p ${PROCESSEDDIR}/Polish
+mkdir -p ${PROCESSEDDIR}/Cluster2
 
 
 echo "Changing Folder to: "
@@ -43,39 +42,41 @@ echo ${SCRIPTSDIR}/IsoSeqPipeline
 cd ${SCRIPTSDIR}/IsoSeqPipeline
 
 
-module load Miniconda2
+#module load Miniconda2
 source activate isoseq
 
+## output version of isoseq
+isoseq --version
 ## output version of ccs
 ccs --version
 ## output version of lima
 lima --version
-#sh ./processIsoSeqSMRTcells.sh ${sample}
+sh ./processIsoSeqSMRTcells_updated.sh ${sample}
 
-module load minimap2
+#module load minimap2
 #sh ./alignIsoSeqSMRTcells.sh ${sample}
 
 
-module purge
-module load Miniconda2
-source activate anaCogent
+#module purge
+#module load Miniconda2
+#source activate anaCogent
 
-mkdir -p ${ALIGNEDDIR}/Collapsed/
+#mkdir -p ${ALIGNEDDIR}/Collapsed/
 
 
 #sh ./filterIsoSeqSMRTcells.sh ${sample}
 
-module purge
-module load STAR
-module load RSEM
+#module purge
+#module load STAR
+#module load RSEM
 
-mkdir -p ${RSEMREFDIR}
-mkdir -p ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/
+#mkdir -p ${RSEMREFDIR}
+#mkdir -p ${GENECOUNTPATH}/RSEM/PersonalTranscriptome/
 
-sh ./alignShortReadSMRTcells.sh ${sample}
+#sh ./alignShortReadSMRTcells.sh ${sample}
 
-module purge
-module load Miniconda2
-source activate SQANTI3.env
+#module purge
+#module load Miniconda2
+#source activate SQANTI3.env
 
-sh ./sqanti3SMRTcells.sh ${sample}
+#sh ./sqanti3SMRTcells.sh ${sample}
