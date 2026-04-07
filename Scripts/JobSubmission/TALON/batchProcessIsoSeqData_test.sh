@@ -10,7 +10,7 @@
 #SBATCH --output=LogFiles/PreprocessIsoseq3s-%A_%a.o
 #SBATCH --error=LogFiles/PreprocessIsoseq3s-%A_%a.e
 #SBATCH --job-name=PreprocessIsoseq3s-%A_%a.e
-#SBATCH --array=0-0 ## runs multiple jobs with 10 at any one time
+#SBATCH --array=0-34 ## runs multiple jobs with 10 at any one time
 
 # this script needs to be submitted from the main repository folder
 
@@ -27,8 +27,7 @@ samples=($(ls *.subreads.bam))
 
 echo "Samples to process: " ${#samples[@]}
 
-sample=${DATADIR}/${samples[${SLURM_ARRAY_TASK_ID}]}
-
+sample=${samples[${SLURM_ARRAY_TASK_ID}]}
 
 ## run first steps on each smrt cell individually
 mkdir -p ${PROCESSEDDIR}/CCS
@@ -45,13 +44,16 @@ cd ${SCRIPTSDIR}/IsoSeqPipeline
 #module load Miniconda2
 source activate isoseq
 
+echo "software tools used"
+
 ## output version of isoseq
 isoseq --version
 ## output version of ccs
 ccs --version
 ## output version of lima
 lima --version
-bash ./processIsoSeqSMRTcells_updated.sh ${sample}
+
+bash ./processIsoSeqSMRTcells_updated.sh ${sample} # Run script 
 
 #module load minimap2
 #sh ./alignIsoSeqSMRTcells.sh ${sample}

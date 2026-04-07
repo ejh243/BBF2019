@@ -9,51 +9,45 @@ p=$1
 
 echo "Processing " ${p}
 basename=$(basename "$p" .subreads.bam)
-echo "Basename: $basename"
 
-echo "Processing ${p}"
-echo "PWD: $(pwd)"
 echo "DATADIR: ${DATADIR}"
 echo "Input file: ${p}"
-echo "Basename: ${basename}"
-ls -lh "${p}"
-echo "Batch script DATADIR: ${DATADIR}"
 
 # Step 1: CCS - Generate circular consensus sequences (ccs) from subreads
 if [ ! -f ${PROCESSEDDIR}/CCS/${basename}.ccs.bam ] ## if final output file doesn't exist, run it through this loop
   then
-  echo "File not found - Circular Consensus Sequence calling"
+  echo "Ouput file not found - Running Circular Consensus Sequence calling"
   ## Circular Consensus Sequence calling
   ccs ${p} ${PROCESSEDDIR}/CCS/${basename}.ccs.bam --min-rq 0.9 --min-passes 1 --report-file ${PROCESSEDDIR}/CCS/${basename}.ccs_report.txt
   
 else
-		echo "File Found - skipping Circular Consensus Sequence calling"
+		echo "Ouput file Found - skipping Circular Consensus Sequence calling"
 fi
 
 
 # Step 2: Lima - Remove cDNA primers and demultiplexing barcoded data 
 if [ ! -f ${PROCESSEDDIR}/Lima/${basename}.fl.*_5p--NEB_Clontech_3p.bam ] ## if final output file doesn't exist, run it through this loop
   then
-  echo "File not found - Primer removal and demultiplexing"
+  echo "Ouput file not found - Running Primer removal and demultiplexing"
  	
   ## Primer removal and demultiplexing
   lima --isoseq --peek-guess --dump-clips --num-threads 24 ${PROCESSEDDIR}/CCS/${basename}.ccs.bam ${RESOURCESDIR}/primer.fasta ${PROCESSEDDIR}/Lima/${basename}.fl.bam 
   
 else
-		echo "File Found - skipping primer removal and demultiplexing"
+		echo "Ouput file Found - skipping primer removal and demultiplexing"
 fi
 
 
 # Step 3: Refine - Remove polyA and concatemers from FL reads and generate FLNC transcripts
 if [ ! -f ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ] ## if final output file doesn't exist, run it through this loop
   then
-  echo "File not found - refine"
+  echo "Ouput file not found - Running Isoseq refine"
  
   ## refine
   isoseq refine --require-polya ${PROCESSEDDIR}/Lima/${basename}.fl.*_5p--NEB_Clontech_3p.bam ${RESOURCESDIR}/primer.fasta ${PROCESSEDDIR}/Refine/${basename}.flnc.bam
   
 else
-		echo "File Found - skipping refine step"
+		echo "Ouput file Found - skipping refine step"
 fi
 
 
@@ -61,13 +55,13 @@ fi
 # Note - polish step not required in newer pipeline / cluster2 tool 
 if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam ] ## if final output file doesn't exist, run it through this loop
   then
-  echo "File not found - Clustering "
+  echo "Ouput file not found - Running Clustering step"
 
 	isoseq cluster2 ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_${basename}.log
   
 else
-		echo "File Found - skipping clustering"
+		echo "Ouput file Found - skipping clustering"
 fi
 
 # End of bulk Iso-Seq workflow. Next to continue to pigeon workflow. 
-
+echo "End of Isoseq bulk processing script."
