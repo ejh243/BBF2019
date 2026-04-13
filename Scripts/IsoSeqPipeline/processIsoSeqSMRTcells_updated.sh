@@ -17,7 +17,7 @@ echo "Input file: ${p}"
 if [ ! -f ${PROCESSEDDIR}/CCS/${basename}.ccs.bam ] ## if final output file doesn't exist, run it through this loop
   then
   echo "Ouput file not found - Running Circular Consensus Sequence calling"
-  ## Circular Consensus Sequence calling
+  # Run Circular Consensus Sequence calling
   ccs ${p} ${PROCESSEDDIR}/CCS/${basename}.ccs.bam --min-rq 0.9 --min-passes 1 --report-file ${PROCESSEDDIR}/CCS/${basename}.ccs_report.txt
   
 else
@@ -29,8 +29,7 @@ fi
 if [ ! -f ${PROCESSEDDIR}/Lima/${basename}.fl.*_5p--NEB_Clontech_3p.bam ] ## if final output file doesn't exist, run it through this loop
   then
   echo "Ouput file not found - Running Primer removal and demultiplexing"
- 	
-  ## Primer removal and demultiplexing
+  # Run Primer removal and demultiplexing
   lima --isoseq --peek-guess --dump-clips --num-threads 24 ${PROCESSEDDIR}/CCS/${basename}.ccs.bam ${RESOURCESDIR}/primer.fasta ${PROCESSEDDIR}/Lima/${basename}.fl.bam 
   
 else
@@ -42,8 +41,7 @@ fi
 if [ ! -f ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ] ## if final output file doesn't exist, run it through this loop
   then
   echo "Ouput file not found - Running Isoseq refine"
- 
-  ## refine
+  # Run Refine
   isoseq refine --require-polya ${PROCESSEDDIR}/Lima/${basename}.fl.*_5p--NEB_Clontech_3p.bam ${RESOURCESDIR}/primer.fasta ${PROCESSEDDIR}/Refine/${basename}.flnc.bam
   
 else
