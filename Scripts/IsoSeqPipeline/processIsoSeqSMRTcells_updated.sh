@@ -49,5 +49,17 @@ else
 fi
 
 
-echo "End of Isoseq per SMRT Cell bulk processing script. Can merge data across SMRT cells before clustering."
-# End of script 
+# Step 4: Cluster2 - Cluster FLNC reads and generate transcripts
+# Note - polish step not required in newer pipeline / cluster2 tool 
+if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam ] ## if final output file doesn't exist, run it through this loop
+  then
+  echo "Ouput file not found - Running Clustering step"
+
+	isoseq cluster2 ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_${basename}.log
+  
+else
+		echo "Ouput file Found - skipping clustering"
+fi
+
+# End of bulk Iso-Seq workflow. Next to continue to pigeon workflow. 
+echo "End of Isoseq bulk processing script."
