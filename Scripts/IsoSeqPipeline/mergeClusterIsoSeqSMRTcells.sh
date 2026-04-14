@@ -28,11 +28,11 @@ fi
 # Cluster2 - Cluster FLNC reads and generate transcripts
 # Note - polish step not required in newer pipeline / cluster2 tool 
 
-if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam  ## if final output file doesn't exist, run it through this loop
+if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam  ## if final output file doesn't exist, run it through this loop
   then
   echo "Ouput file not found - Running Clustering step"
 
-	isoseq cluster2 ${PROCESSEDDIR}/Refine/${basename}.flnc.bam ${PROCESSEDDIR}/Cluster2/clustered_${basename}.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_${basename}.log
+	isoseq cluster2 ${PROCESSEDDIR}/Refine*.flnc.bam ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_flnc_fofn.log
   
 else
 		echo "Ouput file Found - skipping clustering"
