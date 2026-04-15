@@ -34,7 +34,7 @@ sample=${DATADIR}/${samples[${SLURM_ARRAY_TASK_ID}]}
 mkdir -p ${PROCESSEDDIR}/CCS
 mkdir -p ${PROCESSEDDIR}/Lima
 mkdir -p ${PROCESSEDDIR}/Refine
-mkdir -p ${PROCESSEDDIR}/Cluster2
+mkdir -p ${PROCESSEDDIR}/Cluster2 # This step is for all smrt cells merged 
 
 
 echo "Changing Folder to: "

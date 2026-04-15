@@ -18,7 +18,7 @@ if [ ! -f ${PROCESSEDDIR}/Refine/flnc.fofn ] ## if final output file doesn't exi
   then
   echo "Ouput file not found - Running Merging step"
 
-	ls ${PROCESSEDDIR}/Refine*.flnc.bam > flnc.fofn
+	ls ${PROCESSEDDIR}/Refine/*.flnc.bam > flnc.fofn
   
 else
 		echo "Ouput file Found - skipping merging"
@@ -32,7 +32,7 @@ if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam  ## if final output f
   then
   echo "Ouput file not found - Running Clustering step"
 
-	isoseq cluster2 ${PROCESSEDDIR}/Refine*.flnc.bam ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_flnc_fofn.log
+	isoseq cluster2 ${PROCESSEDDIR}/Refine/flnc.fofn ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam --singletons --log-file ${PROCESSEDDIR}/Cluster/clustered_flnc_fofn.log
   
 else
 		echo "Ouput file Found - skipping clustering"
