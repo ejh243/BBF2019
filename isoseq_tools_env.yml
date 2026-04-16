@@ -1,0 +1,52 @@
+name: isoseq_tools
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - _openmp_mutex=4.5
+  - bamtools=2.5.3
+  - bzip2=1.0.8
+  - c-ares=1.34.6
+  - ca-certificates=2026.2.25
+  - htslib=1.23.1
+  - isoseq=4.3.0
+  - jsoncpp=1.9.6
+  - keyutils=1.6.3
+  - krb5=1.22.2
+  - ld_impl_linux-64=2.45.1
+  - libcurl=8.19.0
+  - libdeflate=1.25
+  - libedit=3.1.20250104
+  - libev=4.33
+  - libexpat=2.7.5
+  - libffi=3.5.2
+  - libgcc=15.2.0
+  - libgcc-ng=15.2.0
+  - libgomp=15.2.0
+  - liblzma=5.8.3
+  - libnghttp2=1.68.1
+  - libnsl=2.0.1
+  - libsqlite=3.53.0
+  - libssh2=1.11.1
+  - libstdcxx=15.2.0
+  - libuuid=2.42
+  - libxcrypt=4.4.36
+  - libzlib=1.3.2
+  - lima=2.13.0
+  - ncurses=6.5
+  - openssl=3.6.2
+  - packaging=26.1
+  - pbccs=6.4.0
+  - pbmm2=26.1.99
+  - pbpigeon=1.4.0
+  - pip=26.0.1
+  - python=3.10.20
+  - readline=8.3
+  - samtools=1.23.1
+  - setuptools=82.0.1
+  - tk=8.6.13
+  - tzdata=2025c
+  - wheel=0.46.3
+  - zstd=1.5.7
+prefix: /lustre/home/vs455/.conda/envs/isoseq_tools
