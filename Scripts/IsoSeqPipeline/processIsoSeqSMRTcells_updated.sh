@@ -48,5 +48,5 @@ else
 		echo "Ouput file Found - skipping refine step"
 fi
 
-echo "End of Isoseq per SMTcell bulk processing script."
+echo "End of Isoseq per SMRT cell bulk processing script."
 # End of script 
