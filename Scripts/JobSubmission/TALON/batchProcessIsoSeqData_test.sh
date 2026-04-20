@@ -6,11 +6,12 @@
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
 #SBATCH --mail-type=END # send email at job completion 
-#SBATCH --mail-user=v.suresh@exeter.ac.uk # email me at job completion
-#SBATCH --output=LogFiles/PreprocessIsoseq_test-%A_%a.out
-#SBATCH --error=LogFiles/PreprocessIsoseq_test-%A_%a.err
+#SBATCH --mail-user=v.suresh@exeter.ac.uk # enter email address
+#SBATCH --output=/lustre/home/vs455/LogFiles/PreprocessIsoseq_test-%A_%a.out 
+#SBATCH --error=/lustre/home/vs455/LogFiles/PreprocessIsoseq_test-%A_%a.err 
 #SBATCH --job-name=PreprocessIsoseq_test
-#SBATCH --array=0-34%10 ## runs multiple jobs with 10 at any one time
+#SBATCH --time=05:00:00
+#SBATCH --array=0-1%2 ## runs multiple jobs with 10 at any one time (set 0-34%10 for full cohort)
 
 # this script needs to be submitted from the main repository folder
 # Example Usage: sbatch Scripts/JobSubmission/TALON/batchProcessIsoSeqData_test.sh
