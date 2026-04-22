@@ -6,3 +6,7 @@ export PROCESSEDDIR="/lustre/home/vs455/isoseq_pipeline_test/processed_data"
 export RESOURCESDIR="/lustre/projects/Research_Project-193495/Resources"  
 
 export SCRIPTSDIR="/lustre/home/vs455/BBF2019/Scripts"
+
+export REFGENOME="/gpfs/mrc0/projects/Research_Project-MRC190311/references/grch38/ncbi/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/genome.fa"
+
+export ALIGNEDDIR="/lustre/home/vs455/isoseq_pipeline_test/aligned"

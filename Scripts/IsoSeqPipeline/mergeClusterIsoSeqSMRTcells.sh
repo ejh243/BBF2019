@@ -3,9 +3,10 @@
 #SBATCH -p pq # submit to the serial queue
 #SBATCH --time=24:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
-#SBATCH --nodes=1 # specify number of nodes.
-#SBATCH --cpus-per-task=64
-#SBATCH --mem=200G
+#SBATCH --nodes=1 # specify number of nodes
+#SBATCH --ntasks=1 # specify number of tasks per node
+#SBATCH --cpus-per-task=16 # full node utilisation 
+#SBATCH --mem=100G # 120 GB total 
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # email me at job completion
 #SBATCH --output=/lustre/home/vs455/LogFiles/Cluster2_test-%j.out
@@ -22,6 +23,10 @@
 # This list can be used as input for cluster2 step
 
 # Usage: sbatch Scripts/IsoSeqPipeline/mergeClusterIsoSeqSMRTcells.sh
+
+source ./Config/config.txt
+module load Miniconda3
+source activate isoseq_tools   
 
 echo "Looking for FLNC files in: ${PROCESSEDDIR}"
 mkdir -p ${PROCESSEDDIR}/Cluster2
@@ -46,6 +51,7 @@ if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam ]; then
         ${PROCESSEDDIR}/Refine/flnc.fofn \
         ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam \
         --singletons \
+        --num-threads ${SLURM_CPUS_PER_TASK} \
         --log-file ${PROCESSEDDIR}/Cluster2/cluster2.log
 
 else
