@@ -1,12 +1,15 @@
 # Relevant file paths
 
 export DATADIR="/lustre/home/vs455/isoseq_pipeline_test/raw_data"
-export PROCESSEDDIR="/lustre/home/vs455/isoseq_pipeline_test/processed_data"
+
+export PROCESSEDDIR="/lustre/home/vs455/isoseq_pipeline_test/processing_test_2"
 
 export RESOURCESDIR="/lustre/projects/Research_Project-193495/Resources"  
 
 export SCRIPTSDIR="/lustre/home/vs455/BBF2019/Scripts"
 
-export REFGENOME="/lustre/projects/Research_Project-193495/Resources/GRCh38.primary_assembly.genome.fa"
+export REFGENOME="/lustre/projects/Research_Project-193495/Resources/references/grch38/ncbi/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/"
 
 export ALIGNEDDIR="/lustre/home/vs455/isoseq_pipeline_test/aligned"
+
+export PRIMERSEQ="/lustre/home/vs455/resources/primer.fasta"
