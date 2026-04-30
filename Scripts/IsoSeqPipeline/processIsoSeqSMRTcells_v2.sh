@@ -82,6 +82,7 @@ echo "Processing sample:"
 echo "${basename}"
 
 # Step 1: CCS - Generate circular consensus sequences (ccs) from subreads
+# default min-passes is 3 full length subreads 
 if [ ! -f ${ccs_output}.bam ] ## if final output file doesn't exist, run it through this loop
   then
   echo "Running Circular Consensus Sequence calling"
@@ -89,6 +90,7 @@ if [ ! -f ${ccs_output}.bam ] ## if final output file doesn't exist, run it thro
     "${ccs_output}.bam" \
     --min-rq 0.9 \
     --min-passes 1 \
+    --num-threads $THREADS \
     --report-file ${ccs_output}_report.txt
   
 else

@@ -44,18 +44,18 @@ fi
 # Cluster2 - Cluster FLNC reads and generate transcripts
 # Note - polish step not required in newer pipeline / cluster2 tool 
 
-if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam ]; then
+if [ ! -f ${PROCESSEDDIR}/Cluster2/clustered.bam ]; then
     echo "Running cluster2"
 
     isoseq cluster2 \
         ${PROCESSEDDIR}/Refine/flnc.fofn \
-        ${PROCESSEDDIR}/Cluster2/clustered_flnc_fofn.bam \
+        ${PROCESSEDDIR}/Cluster2/clustered.bam \
         --singletons \
         --num-threads ${SLURM_CPUS_PER_TASK} \
         --log-file ${PROCESSEDDIR}/Cluster2/cluster2.log
 
 else
-    echo "Cluster output exists - skipping"
+    echo "Cluster2 output exists - skipping"
 fi
 
 echo "Done"
