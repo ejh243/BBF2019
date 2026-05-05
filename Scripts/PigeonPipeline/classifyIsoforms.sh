@@ -22,10 +22,11 @@ source ./Config/config.txt
 module load Miniconda3
 source activate isoseq_tools  
 
+cd ${ANNOTATIONDIR} 
 
 # Run Isoform Classification step 
 pigeon classify \
-    ${MASTERTRANSCRIPTOME}/collapsed_default.sorted.gff \
+    ${MASTERTRANSCRIPTOME}/collapsed_legacy.sorted.gff \
     ${RESOURCESDIR}/gencode.v38.annotation.sorted.gtf \
     ${REFGENOME} \
-    --fl ${MASTERTRANSCRIPTOME}/collapsed_default.flnc_count.txt
+    --fl ${MASTERTRANSCRIPTOME}/collapsed_legacy.flnc_count.txt
