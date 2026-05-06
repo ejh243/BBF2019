@@ -17,6 +17,7 @@ conda create -n isoseq_tools -y \
   pbccs \
   pbmm2 \
   pbpigeon \
+  pbbam \
   samtools \
   bamtools 
 

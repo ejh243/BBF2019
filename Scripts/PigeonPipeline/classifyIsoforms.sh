@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p pq # submit to the serial queue
-#SBATCH --time=05:00:00 # Maximum wall time for the job.
+#SBATCH --time=01:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
@@ -25,8 +25,15 @@ source activate isoseq_tools
 cd ${ANNOTATIONDIR} 
 
 # Run Isoform Classification step 
-pigeon classify \
-    ${MASTERTRANSCRIPTOME}/collapsed_legacy.sorted.gff \
-    ${RESOURCESDIR}/gencode.v38.annotation.sorted.gtf \
-    ${REFGENOME} \
-    --fl ${MASTERTRANSCRIPTOME}/collapsed_legacy.flnc_count.txt
+if [ ! -f ${MASTERTRANSCRIPTOME}/collapsed_legacy.gff ]; then
+    echo "Running isoform classification..."
+    
+    pigeon classify \
+        ${MASTERTRANSCRIPTOME}/collapsed.sorted.gff \
+        ${RESOURCESDIR}/gencode.v38.annotation.sorted.gtf \
+        ${REFGENOME} \
+        --fl ${MASTERTRANSCRIPTOME}/collapsed.flnc_count.txt
+
+else
+    echo "Annotation output file exists - skipping"
+fi

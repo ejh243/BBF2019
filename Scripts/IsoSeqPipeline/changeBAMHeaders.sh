@@ -43,6 +43,10 @@ for bam in "${PROCESSEDDIR}"/Refine/*.flnc.bam; do
         | sed -E "s/SM:[^[:space:]]+/SM:SMRT_${run}/" \
         | samtools reheader - "$bam" > "$renamed_out"
 
+        # Generate PBI index file
+        echo "Generating PBI index..."
+        pbindex "$renamed_out"
+
     else
         echo "Renamed BAM file exists - skipping"
     fi

@@ -10,7 +10,8 @@ load using `source activate isoseq_tools`
 1. Per-SMRT cell preprocessing (ccs, lima and refine) <br>
     This creates HiFi reads, removes primers and refine into full length non-concatamer reads <br>
     Designed to run on each SMRT cell individually (parallelisation/batch processing) <br>
-    `sbatch Scripts/IsoSeqPipeline/processIsoSeqSMRTcells_v2.sh`
+    Use the Batch Process script to run `processIsoSeqSMRTcells_updated.sh` <br>
+    `sbatch Scripts/JobSubmission/TALON/batchProcessIsoSeqData_test.sh` <br>
 
 2. Script to edit BAM headers (SM tag) to backtrace each SMRT run after merging <br>
     `sbatch Scripts/IsoSeqPipeline/changeBAMHeaders.sh`
@@ -38,7 +39,6 @@ This is a new PacBio Transcript Toolkit used to classify and filter FLNC transcr
     `sbatch Scripts/PigeonPipeline/classifyIsoforms.sh`
 
 
-*Notes: Could merge some of the scripts or create wrapper scripts. Potentially combine steps 3-5 of isoseq pipeline and leave script 2 as optional? Could also combine the two pigeon scripts into a single script.*
 
 
 

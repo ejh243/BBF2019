@@ -34,8 +34,7 @@ pigeon prepare --log-file ${ANNOTATIONDIR}/prepare_ref.log ${GENCODEGTF} ${REFGE
 
 
 # Prepare transcript isoforms GFF (output from isoform collapse)  
-pigeon prepare --log-file ${ANNOTATIONDIR}/prepare_iso_default.log ${MASTERTRANSCRIPTOME}/collapsed_default.gff
+pigeon prepare --log-file ${ANNOTATIONDIR}/prepare_iso_gff.log ${MASTERTRANSCRIPTOME}/collapsed.gff
 
-pigeon prepare --log-file ${ANNOTATIONDIR}/prepare_iso_legacy.log ${MASTERTRANSCRIPTOME}/collapsed_legacy.gff
 
 

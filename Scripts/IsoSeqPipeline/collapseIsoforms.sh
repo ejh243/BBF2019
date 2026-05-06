@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p pq # submit to the serial queue
-#SBATCH --time=05:00:00 # Maximum wall time for the job.
+#SBATCH --time=01:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
@@ -27,7 +27,7 @@ source activate isoseq_tools
 
 
 # Running with default isoform collapse logic (less strict)
-if [ ! -f ${MASTERTRANSCRIPTOME}/collapsed_default.gff ]; then
+if [ ! -f ${MASTERTRANSCRIPTOME}/collapsed.gff ]; then
     echo "Running isoform collapse with newer settings"
    
     isoseq collapse \
@@ -35,9 +35,9 @@ if [ ! -f ${MASTERTRANSCRIPTOME}/collapsed_default.gff ]; then
         --max-5p-diff 50 \
         --max-3p-diff 100 \
         --num-threads ${SLURM_CPUS_PER_TASK} \
-        ${ALIGNEDDIR}/mapped.bam \
-        ${PROCESSEDDIR}/Refine/flnc.fofn \
-        ${MASTERTRANSCRIPTOME}/collapsed_default.gff
+        ${ALIGNEDDIR}/renamed_mapped.bam \
+        ${MERGEDDIR}/flnc.fofn \
+        ${MASTERTRANSCRIPTOME}/collapsed.gff
 
 else
     echo "Collapse output file exists - skipping"
