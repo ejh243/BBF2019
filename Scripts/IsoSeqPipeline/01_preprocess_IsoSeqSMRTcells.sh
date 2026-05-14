@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p pq # submit to the serial queue
-#SBATCH --time=48:00:00 # Maximum wall time for the job.
+#SBATCH --time=24:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
@@ -10,14 +10,19 @@
 #SBATCH --output=/lustre/home/vs455/LogFiles/PreprocessIsoseq-%A_%a.out 
 #SBATCH --error=/lustre/home/vs455/LogFiles/PreprocessIsoseq-%A_%a.err 
 #SBATCH --job-name=PreprocessIsoseq
-#SBATCH --array=0-34%10 ## runs multiple jobs with 10 at any one time 
+#SBATCH --array=0-34%7 ## runs multiple jobs with 7 at any one time 
 
-## these steps need to be run on each SMRT cell separately
-## do not store any sensitive data use config file to specify filepaths etc. 
+## bash script to automate preprocessing of individual SMRT cells using PacBio IsoSeq tools
+## Parallelisation: Uses a SLURM job array (one SMRT cell per task)
+    ## Configure via --array=0-N%M where N = samples-1 and M = max concurrent jobs
 ## this script requires .subread.bam, .subreads.bam.pbi, and .subreadset.xml files are located in the DATADIR
 
-# this script needs to be submitted from the main repository folder
-# Example Usage: sbatch Scripts/IsoSeqPipeline/processIsoSeqSMRTcells_v2.sh
+## do not store any sensitive data use config file to specify filepaths etc. 
+
+## this script needs to be submitted from the main repository folder
+## Usage: sbatch Scripts/IsoSeqPipeline/01_preprocess_IsoSeqSMRTcells.sh
+
+set -euo pipefail
 
 echo "Starting IsoSeq preprocessing job"
 echo "Job ID: ${SLURM_JOB_ID}"
@@ -83,51 +88,75 @@ echo "${basename}"
 
 # Step 1: CCS - Generate circular consensus sequences (ccs) from subreads
 # default min-passes is 3 full length subreads 
-if [ ! -f ${ccs_output}.bam ] ## if final output file doesn't exist, run it through this loop
-  then
-  echo "Running Circular Consensus Sequence calling"
-  ccs ${sample} \
-    "${ccs_output}.bam" \
-    --min-rq 0.9 \
-    --min-passes 1 \
-    --num-threads $THREADS \
-    --report-file ${ccs_output}_report.txt
-  
+if [ -s "${ccs_output}.bam" ]; then # if valid output file exists, skip step  
+    echo "CCS output file exists - skipping..."
 else
-		echo "CCS output file exists - skipping CCS"
+    echo "Running Circular Consensus Sequence calling"
+
+    # Check if required input file exists
+    if [ ! -s "${sample}" ]; then
+        echo "ERROR: Missing or empty input file for CCS (Raw data)"
+        exit 1
+    fi
+
+    # Run CCS 
+    ccs "${sample}" \
+        "${ccs_output}.bam" \
+        --min-rq 0.9 \
+        --min-passes 1 \
+        --num-threads $THREADS \
+        --report-file ${ccs_output}_report.txt
 fi
 
 
 # Step 2: Lima - Remove cDNA primers and demultiplexing barcoded data 
 # Lima appends primer-specific suffixes to ${lima_output}.<primer_5p--primer_3p>.bam
-# Hence * here is used as a placeholder. Only one BAM output expected 
-if [ ! -f ${lima_output}.*.bam ] ## if final output file doesn't exist, run it through this loop
-  then
-  echo "Running Primer removal and Demultiplexing"
-  lima --isoseq \
-    --peek-guess --dump-clips \
-    --num-threads $THREADS \
-    ${ccs_output}.bam \
-    ${PRIMERSEQ} \
-    ${lima_output}.bam 
-  
+# Hence * here is used as a placeholder
+if ls ${lima_output}.*.bam 1> /dev/null 2>&1; then # if valid output file exists, skip step 
+    echo "Lima output file exists - skipping..."
 else
-		echo "Lima output file exists - skipping primer removal and demultiplexing"
+    echo "Running Primer removal and Demultiplexing"
+
+    # Check if required input file exists
+    if [ ! -s "${ccs_output}.bam" ]; then
+        echo "ERROR: Missing or empty input file for Lima (CCS output)"
+        exit 1
+    fi
+
+    # Run Lima 
+    lima --isoseq \
+        --peek-guess --dump-clips \
+        --num-threads $THREADS \
+        ${ccs_output}.bam \
+        ${PRIMERSEQ} \
+        ${lima_output}.bam
 fi
 
 
 # Step 3: Refine - Remove polyA and concatemers from FL reads and generate FLNC transcripts
-if [ ! -f ${refine_output}.bam ] ## if final output file doesn't exist, run it through this loop
-  then
-  echo "Running Isoseq Refine"
-  isoseq refine \
-    --require-polya \
-    ${lima_output}.*.bam \
-    ${PRIMERSEQ} \
-    ${refine_output}.bam
-  
+if [ -s "${refine_output}.bam" ]; then # if valid output file exists, skip step
+    echo "Refine output file exists - skipping..."
 else
-		echo "Refine output file exists - skipping Refine step"
+    echo "Running Isoseq Refine"
+
+    # Check if required input file exists
+    if ! ls ${lima_output}.*.bam 1> /dev/null 2>&1; then
+        echo "ERROR: Missing or empty input file for Refine (Lima output)"
+        exit 1
+    fi
+
+    # Run IsoSeq Refine  
+    isoseq refine \
+        --require-polya \
+        ${lima_output}.*.bam \
+        ${PRIMERSEQ} \
+        ${refine_output}.bam
+
+    # Final output validation
+    if [ ! -s "${refine_output}.bam" ]; then
+        echo "ERROR: Refine failed — output not created"
+        exit 1
+    fi
 fi
 
 
