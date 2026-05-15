@@ -34,7 +34,7 @@ source activate isoseq_tools
 
 
 # Set output dir
-mkdir -p "${MERGEDDIR}"
+mkdir -p "${PROCESSEDDIR}/FLNC"
 
 
 # Check how many FLNC BAM files exist
@@ -53,7 +53,7 @@ echo "Found ${#bam_files[@]} SMRT cell(s)"
 # Automate to all SMRT cell runs 
 for bam in "${bam_files[@]}"; do
     run=$(basename "$bam" .flnc.bam)
-    renamed_out="${MERGEDDIR}/${run}.flnc.bam"
+    renamed_out="${PROCESSEDDIR}/FLNC/${run}.flnc.bam"
 
     echo "Processing: $run"
 
@@ -89,9 +89,9 @@ done
 
 # Create file of filenames  
 echo "" 
-if [ ! -f ${MERGEDDIR}/flnc.fofn ]; then
+if [ ! -f ${PROCESSEDDIR}/FLNC/flnc.fofn ]; then
     echo "Creating file of filenames (fofn)..."
-    find ${MERGEDDIR} -name "*.flnc.bam" > ${MERGEDDIR}/flnc.fofn
+    find ${PROCESSEDDIR}/FLNC -name "*.flnc.bam" > ${PROCESSEDDIR}/FLNC/flnc.fofn
 else
     echo "flnc.fofn exists - skipping"
 fi

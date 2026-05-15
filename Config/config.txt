@@ -2,9 +2,7 @@
 export DATADIR="/lustre/projects/Research_Project-193495/RawData/PacBio"
 export PROCESSEDDIR="/lustre/projects/Research_Project-193495/IsoSeqProcessed"
 export MERGEDDIR="/lustre/projects/Research_Project-193495/IsoSeqMerged"
-export ALIGNEDDIR="/lustre/projects/Research_Project-193495/Aligned/mergedSMRTcells"
-export MASTERTRANSCRIPTOME="/lustre/projects/Research_Project-193495/MasterTranscriptome/IsoSeq_v4.3.0/transcriptome"
-export ANNOTATIONDIR="/lustre/projects/Research_Project-193495/MasterTranscriptome/IsoSeq_v4.3.0/annotation"
+export MASTERTRANSCRIPTOME="/lustre/projects/Research_Project-193495/MasterTranscriptome_v2/"
 
 
 # Resources 
