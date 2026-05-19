@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p pq # submit to the serial queue
-#SBATCH --time=48:00:00 # Maximum wall time for the job.
+#SBATCH --time=24:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
@@ -46,14 +46,14 @@ out_mapped="${MERGEDDIR}/Aligned/mapped"
 out_collapse="${MASTERTRANSCRIPTOME}/Isoforms/collapsed"
 
 
-# Set safe temp directory
+## Set safe temp directory
 export TMPDIR="${MERGEDDIR}/tmp"
 mkdir -p "${TMPDIR}"
 
 echo "TMPDIR set to: $TMPDIR"
 df -h "$TMPDIR"
 
-# Step 1: IsoSeq Cluster2 - Cluster FLNC reads and generate transcripts
+## Step 1: IsoSeq Cluster2 - Cluster FLNC reads and generate transcripts
 # if valid output file exists, skip step  
 if [ -s "${out_cluster}.bam" ]; then 
     echo "IsoSeq Cluster2 output exists - skipping..."
@@ -76,7 +76,7 @@ else
 fi
 
 
-# Step 2: PacBio Minimap2 - Map all FLNC reads to reference genome 
+## Step 2: PacBio Minimap2 - Map all FLNC reads to reference genome 
 # if valid output file exists, skip step  
 if [ -s "${out_mapped}.bam" ]; then 
     echo "Aligned BAM exists - skipping..."
@@ -100,7 +100,7 @@ else
     ${out_mapped}.bam 
 fi
 
-# Step 3: IsoSeq Collapse - Collapse transcripts into unique isoforms 
+## Step 3: IsoSeq Collapse - Collapse transcripts into unique isoforms 
 # if valid output file exists, skip step  
 if [ -s "${out_collapse}.gff" ]; then 
     echo "Collapsed isoforms exist - skipping..."
@@ -125,4 +125,7 @@ else
 fi
 
 echo "Master Transcriptome complete"
-# End of script
+
+rmdir -r "${TMPDIR}" # remove dir with temporary files 
+
+## End of script
