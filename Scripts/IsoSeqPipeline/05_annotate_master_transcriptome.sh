@@ -95,20 +95,16 @@ else
         exit 1
     fi
 
-    # Ensure outputs land in correct directory
-    cd ${MASTERTRANSCRIPTOME}/Annotation
-
     # Run Pigeon Classify 
     pigeon classify \
+        --fl ${flnc_count} \
+        --out-dir ${MASTERTRANSCRIPTOME}/Annotation/ \
+        --num-threads ${SLURM_CPUS_PER_TASK:-8} \
         ${sorted_isoform_gff} \
         ${sorted_ref_gtf} \
-        ${REFGENOME} \
-        --fl ${flnc_count}
-
+        ${REFGENOME} 
+        
 fi
-
-echo ""
-echo "Completed Isoform Classification"
 
 
 ## Step 3: Filter isoforms from the classification output
