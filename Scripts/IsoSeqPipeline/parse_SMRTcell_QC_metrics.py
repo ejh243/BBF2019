@@ -101,7 +101,7 @@ def main():
     Fail_full_passes_pct = pct_calc(ccs["Fail_lacking_full_passes"], ccs["ZMWs_fail"])
     Fail_below_RQ_pct = pct_calc(ccs["Fail_below_min_RQ"], ccs["ZMWs_fail"])
 
-    FLNC_rate_pct = pct_calc(ref["FLNC_reads"], ref["FL_reads"])
+    FLNC_rate_pct = pct_calc(ref["FLNC_reads"], ccs["ZMWs_input"])
     FLNC_polyA_pct_input = pct_calc(ref["FLNC_polyA_reads"], ccs["ZMWs_input"])
 
     # Output TSV row 

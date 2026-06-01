@@ -10,6 +10,6 @@ export RESOURCESDIR="/lustre/projects/Research_Project-193495/Resources/"
 export SCRIPTSDIR="/lustre/home/vs455/BBF2019/Scripts"
 
 export REFGENOME="/lustre/projects/Research_Project-193495/Resources/references/grch38/ncbi/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/genome.fa"
-export GENCODEGTF="/lustre/projects/Research_Project-193495/Resources/GENCODE/gencode.v48.annotation.gtf"
+export GENCODEGTF="/lustre/projects/Research_Project-193495/Resources/GENCODE/exeter.ont.annotation_v2.gtf"
 
 export PRIMERSEQ="/lustre/projects/Research_Project-193495/Resources/primer.fasta"
