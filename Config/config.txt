@@ -4,6 +4,9 @@ export PROCESSEDDIR="/lustre/projects/Research_Project-193495/IsoSeqProcessed"
 export MERGEDDIR="/lustre/projects/Research_Project-193495/IsoSeqMerged"
 export MASTERTRANSCRIPTOME="/lustre/projects/Research_Project-193495/MasterTranscriptome_v2/"
 
+export SHORTREADS="/lustre/projects/Research_Project-193495/RawData/EpiGABA/RNASeq/"
+export RNASEQDIR="/lustre/projects/Research_Project-193495/RNASeq"
+
 
 # Resources 
 export RESOURCESDIR="/lustre/projects/Research_Project-193495/Resources/"  
