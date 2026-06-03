@@ -7,16 +7,19 @@
 #SBATCH --ntasks-per-node=16 # specify number of processors per node
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # enter email address
-#SBATCH --output=/lustre/home/vs455/LogFiles/PreprocessEpiGABA-%A_%a.out 
-#SBATCH --error=/lustre/home/vs455/LogFiles/PreprocessEpiGABA-%A_%a.err 
-#SBATCH --job-name=PreprocessEpiGABA
-#SBATCH --array=0-30%6 ## runs multiple jobs with 6 at any one time 
+#SBATCH --output=/lustre/home/vs455/LogFiles/PreprocessShortReads-%A_%a.out 
+#SBATCH --error=/lustre/home/vs455/LogFiles/PreprocessShortReads-%A_%a.err 
+#SBATCH --job-name=PreprocessShortReads
+#SBATCH --array=0-19%5 ## runs multiple jobs with 5 at any one time 
 
 ## bash script to automate preprocessing of paired short read data 
 ## Parallelisation: Uses a SLURM job array (one SMRT cell per task)
     ## Configure via --array=0-N%M where N = samples-1 and M = max concurrent jobs
 
 ## do not store any sensitive data use config file to specify filepaths etc. 
+## please provide either $SHORTREADS or $SHORTREAD_LIST in the config file
+#   Assumes paired-end FASTQs are named: sample.R1.fastq.gz & sample.R2.fastq.gz
+#   If a different naming convention is used, modify lines flagged with "# must match filename pattern" 
 
 ## this script needs to be submitted from the main repository folder
 ## Usage: sbatch Scripts/RNASeq/01_preprocess_ShortReads.sh
@@ -53,49 +56,85 @@ mkdir -p "${FASTQC_TRIMMED}"
 
 
 ## Locate all input FASTQ files 
-mapfile -t ALL_FASTQS < <(
-    find "${SHORTREADS}" \
-        -maxdepth 1 \
-        -name "*.fastq.gz" \
-        | sort
-)
 
-echo "Total FASTQ.GZ files found: ${#ALL_FASTQS[@]}"
+# Validate input configuration 
+if [[ -n "${SHORTREADS:-}" && -n "${SHORTREAD_LIST:-}" ]]; then
+    echo "ERROR: Specify either SHORTREADS or SHORTREAD_LIST in config file, not both"
+    exit 1
+fi
 
-FQFILES=($(find ${SHORTREADS} -maxdepth 1 -name '*.fastq.gz' ))
+if [[ -z "${SHORTREADS:-}" && -z "${SHORTREAD_LIST:-}" ]]; then
+    echo "ERROR: Specify either SHORTREADS or SHORTREAD_LIST in config file"
+    exit 1
+fi
 
-# Build sample list using R1 files only
+
+## Read FASTQ files
+if [[ -n "${SHORTREAD_LIST:-}" ]]; then # If list is provided, check if files exist
+    if [[ ! -f "${SHORTREAD_LIST}" ]]; then
+        echo "ERROR: FASTQ list file not found:"
+        echo "${SHORTREAD_LIST}"
+        exit 1
+    fi
+
+    echo "Reading FASTQ files from list:"
+    echo "${SHORTREAD_LIST}"
+    mapfile -t ALL_FASTQS < "${SHORTREAD_LIST}"
+
+else # If filepath provided, read all FASTQ files in provided directory 
+    echo "Searching FASTQ files in:"
+    echo "${SHORTREADS}"
+    mapfile -t ALL_FASTQS < <(find "${SHORTREADS}" -maxdepth 1 -name "*.fastq.gz" | sort)
+fi
+
+echo "Total FASTQ files found: ${#ALL_FASTQS[@]}"
+echo
+
+
+## Build sample list using R1 FASTQ files
 mapfile -t FQFILES < <(
-    find "${SHORTREADS}" \
-        -maxdepth 1 \
-        -name "*.R1.fastq.gz" \
-        | sort
+    printf "%s\n" "${ALL_FASTQS[@]}" |
+    grep '_R1_001\.fastq\.gz$' |   # must match filename pattern 
+    sort
 )
 
 echo "Number of samples found: ${#FQFILES[@]}"
 echo
 
-# Safety check 
+
+# Safety checks 
+if [[ ${#FQFILES[@]} -eq 0 ]]; then
+    echo "ERROR: No R1 FASTQ files found."
+    exit 1
+fi
+
 if [[ ${SLURM_ARRAY_TASK_ID} -ge ${#FQFILES[@]} ]]; then
     echo "ERROR: Array index ${SLURM_ARRAY_TASK_ID} exceeds number of samples (${#FQFILES[@]})."
     exit 1
 fi
 
+
 # Select sample for this array
 f1="${FQFILES[$SLURM_ARRAY_TASK_ID]}"
-f2="${f1/.R1.fastq.gz/.R2.fastq.gz}"
+f2="${f1/_R1_001.fastq.gz/_R2_001.fastq.gz}" # must match filename pattern 
 
-sampleName=$(basename "${f1}" .R1.fastq.gz)
+sampleName=$(basename "${f1}" _R1_001.fastq.gz) # must match filename pattern 
 
 echo "Processing sample: ${sampleName}"
 echo "R1 FASTQ: ${f1}"
 echo "R2 FASTQ: ${f2}"
 echo
 
+## Verify paired FASTQ exists 
+if [[ ! -f "${f1}" ]]; then
+    echo "ERROR: R1 FASTQ file not found."
+    echo "Expected file:"
+    echo "${f1}"
+    exit 1
+fi
 
-# Verify paired FASTQ exists 
 if [[ ! -f "${f2}" ]]; then
-    echo "ERROR: Mate pair not found."
+    echo "ERROR: R2 FASTQ file not found."
     echo "Expected file:"
     echo "${f2}"
     exit 1
@@ -107,32 +146,18 @@ echo
 
 # Step 1: Run FASTQC on Raw Reads
 echo "Running FastQC on raw reads..."
-
-fastqc "${f1}" "${f2}" \
-    --threads 16 \
-    --outdir "${FASTQC_RAW}"
+#fastqc "${f1}" "${f2}"  --threads 16  --outdir "${FASTQC_RAW}"
 
 
 # Step 2: Run Trim Galore 
 echo "Running Trim Galore..."
-
-trimmed_f1="${TRIMDIR}/${sampleName}.R1.fastq.gz"
-trimmed_f2="${TRIMDIR}/${sampleName}.R2.fastq.gz"
-
-trim_galore --paired ${f1} ${f2} --fastqc -o ${TRIMDIR}
-
-if [[ -s "${trimmed_f1}" ]] || [[-s "${trimmed_f2}" ]]; then
-echo "ERROR: Trimmed FASTQ files not found"
-exit 1
-fi
+echo "followed by FastQC on trimmed reads..."
+trim_galore --paired  "${f1}" "${f2}" --fastqc -o "${TRIMDIR}"
 
 
-# Step 3: Move FASTQC results into relevant folder 
-echo "Running FastQC on trimmed reads..."
-
-fastqc "${trimmed_f1}" "${trimmed_f2}" \
-    --threads 16 \
-    --outdir "${FASTQC_TRIMMED}"
+# Step 3: Move FASTQC reports to relevant folder 
+echo "Moving FastQC reports..."
+mv "${TRIMDIR}"/*fastqc.* "${FASTQC_TRIMMED}/" 2>/dev/null || true
 
 echo
 echo "Completed preprocessing for ${sampleName}"
