@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-## set up conda environment for Modern IsoSeq pipeline 
-# Based on current IsoSeq CLI workflow (v4+)
-# No Cupcake, Python 3 only
+## set up conda environment for Modern IsoSeq and RNA-Seq pipelines 
 
-module load Miniconda3
-source ./Config/config.txt
-
+## IsoSeq environment 
+#   Based on current IsoSeq CLI workflow (v4+)
+#   No Cupcake, Python 3 only
 conda create -n isoseq_tools -y \
   -c conda-forge \
   -c bioconda \
@@ -22,17 +20,17 @@ conda create -n isoseq_tools -y \
   bamtools 
 
 
-## set up conda environment for latest RNA-Seq pipeline 
-# Latest version of FastQC and STAR already available on server 
-
-module load FastQC
-module load STAR
-
+## RNASeq environment 
 conda create -n rnaseq_tools -y \
   -c conda-forge \
   -c bioconda \
+  python=3.10 \
+  fastqc \
+  star \
   trim-galore \
-  subread
+  subread \
+  samtools 
+
 
 
 # To create environment.yml 
