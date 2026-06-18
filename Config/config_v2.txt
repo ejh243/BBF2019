@@ -1,12 +1,13 @@
 # This is the config file to be used when using the Isambard3 server
 
-export SHORTREADS="/projects/e6e/RawData/EpiGABA"
-export RNASEQDIR="/projects/e6e/RNASeq/EpiGABA"
+# Relevant directories 
+export SHORTREADS="/lfs1i3/projects/e6e/RawData/EpiGABA"
+export RNASEQDIR="/lfs1i3/projects/e6e/RNASeq/EpiGABA"
 
 
 # Resources 
-export RESOURCESDIR="/projects/e6e/Resources"  
-export SCRIPTSDIR="/projects/e6e/BBF2019/Scripts"
+export RESOURCESDIR="/lfs1i3/projects/e6e/Resources"  
+export SCRIPTSDIR="/lfs1i3/projects/e6e/BBF2019/Scripts"
 
-export REFGENOME="/projects/e6e/Resources/genome.fa"
-export GENCODEGTF="/projects/e6e/Resources/gencode.v48.annotation.gtf"
+export REFGENOME="/lfs1i3/projects/e6e/Resources/genome.fa"
+export GENCODEGTF="/lfs1i3/projects/e6e/Resources/gencode.v48.annotation.gtf"

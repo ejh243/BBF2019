@@ -1,16 +1,16 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
-#SBATCH -p pq # submit to the serial queue
 #SBATCH --time=05:00:00 # Maximum wall time for the job.
-#SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
-#SBATCH --cpus-per-task=16 # full node utilisation 
+#SBATCH --cpus-per-task=16 # full node utilisation
+#SBATCH --mem=64G # Memory usage 
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # email me at job completion
-#SBATCH --output=/lustre/home/vs455/LogFiles/STAR_Index-%j.out
-#SBATCH --error=/lustre/home/vs455/LogFiles/STAR_Index-%j.err
+#SBATCH --output=/lfs1i3/projects/e6e/LogFiles/STAR_Index-%j.out
+#SBATCH --error=/lfs1i3/projects/e6e/LogFiles/STAR_Index-%j.err
 #SBATCH --job-name=STAR_Index
+
 
 ## script to create STAR index ahead of alignment 
 
@@ -20,11 +20,10 @@ set -euo pipefail
 
 
 ## Load required software and configurations 
-source ./Config/config.txt
+source ./Config/config_v2.txt
 
-module load STAR
-module load Miniconda3
-source activate rnaseq_tools
+source ~/miniconda3/etc/profile.d/conda.sh  # in place of module load Miniconda3
+conda activate rnaseq_tools
 
 
 # Set output dir
@@ -34,7 +33,7 @@ mkdir -p "$STARDIR"
 
 ## Run STAR on genomeGenerate mode
 STAR \
-  --runThreadN 16 \
+  --runThreadN ${SLURM_CPUS_PER_TASK} \
   --runMode genomeGenerate \
   --genomeDir ${STARDIR} \
   --genomeFastaFiles ${REFGENOME} \

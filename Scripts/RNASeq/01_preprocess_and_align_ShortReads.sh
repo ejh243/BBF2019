@@ -2,13 +2,14 @@
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH --time=24:00:00 # Maximum wall time for the job.
 #SBATCH --nodes=1 # specify number of nodes.
-#SBATCH --ntasks-per-node=16 # specify number of processors per node
+#SBATCH --cpus-per-task=16 # specify number of threads per task 
+#SBATCH --mem=64G # Memory usage 
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # enter email address
-#SBATCH --output=/projects/e6e/LogFiles/AlignShortReads-%A_%a.out 
-#SBATCH --error=/projects/e6e/LogFiles/AlignShortReads-%A_%a.err 
+#SBATCH --output=/lfs1i3/projects/e6e/LogFiles/AlignShortReads-%A_%a.out 
+#SBATCH --error=/lfs1i3/projects/e6e/LogFiles/AlignShortReads-%A_%a.err 
 #SBATCH --job-name=AlignShortReads
-#SBATCH --array=0-19%5 ## runs multiple jobs with 5 at any one time 
+#SBATCH --array=0-47%3 ## runs multiple jobs with 3 at any one time 
 
 ## bash script to automate preprocessing of paired short read data 
 ## Parallelisation: Uses a SLURM job array (one SMRT cell per task)
@@ -38,7 +39,7 @@ trim_galore --version
 fastqc --version
 STAR --version 
 
-THREADS=16
+THREADS=${SLURM_CPUS_PER_TASK:-16}
 
 
 ## Output directories 
@@ -111,7 +112,7 @@ echo
 
 
 # Step 1: Run FASTQC on Raw Reads
-if [[ ! -f "${FASTQC_RAW}/${sampleName}_fastqc.zip" ]]; then
+if ! ls "${FASTQC_RAW}/${sampleName}"*fastqc.zip > /dev/null 2>&1; then
     echo "Running FastQC on raw reads..."
     fastqc "$f1" "$f2" --threads $THREADS --outdir "$FASTQC_RAW"
 else
@@ -120,6 +121,7 @@ fi
 
 
 # Step 2: Run Trim Galore 
+echo
 if ! ls "${TRIMDIR}/${sampleName}"*val_1.f*q.gz >/dev/null 2>&1; then
     echo "Running Trim Galore, followed by FastQC... "
     trim_galore --paired "$f1" "$f2" --fastqc -o "$TRIMDIR"
