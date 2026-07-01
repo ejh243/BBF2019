@@ -1,13 +1,14 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
-#SBATCH --time=05:00:00 # Maximum wall time for the job.
+#SBATCH --time=01:00:00 # Maximum wall time for the job.
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
-#SBATCH --cpus-per-task=16 # full node utilisation 
+#SBATCH --cpus-per-task=4 
+#SBATCH --mem=8G 
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # email me at job completion
-#SBATCH --output=/lfs1i3/projects/e6e/LogFiles/FeatureCounts_EpiGABA-%A_%a.out 
-#SBATCH --error=/lfs1i3/projects/e6e/LogFiles/FeatureCounts_EpiGABA-%A_%a.err 
+#SBATCH --output=/lfs1i3/projects/e6e/LogFiles/FeatureCounts_ExSR-%j.out 
+#SBATCH --error=/lfs1i3/projects/e6e/LogFiles/FeatureCounts_ExSR-%j.err 
 #SBATCH --job-name=FeatureCounts
 
 
@@ -35,8 +36,8 @@ conda activate rnaseq_tools
 ## Set variables  
 THREADS=${SLURM_CPUS_PER_TASK:-16}
 
-ALIGNEDDIR="${RNASEQDIR}/aligned_reads"
-OUTPUT="${RNASEQDIR}/gene_counts.txt"
+ALIGNEDDIR="${RNASEQDIR}/aligned_reads_primary"
+OUTPUT="${RNASEQDIR}/gene_counts_primary_bam.txt"
 
 
 ## Check input BAM files exist
