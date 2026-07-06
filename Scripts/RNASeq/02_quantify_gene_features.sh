@@ -37,7 +37,7 @@ conda activate rnaseq_tools
 THREADS=${SLURM_CPUS_PER_TASK:-16}
 
 ALIGNEDDIR="${RNASEQDIR}/aligned_reads_primary"
-OUTPUT="${RNASEQDIR}/gene_counts_primary_bam.txt"
+OUTPUT="${RNASEQDIR}/gene_counts_primary_bam_s2.txt"
 
 
 ## Check input BAM files exist
@@ -62,7 +62,7 @@ else
     featureCounts \
       -T "$THREADS" \
       -p \
-      -s 0 \
+      -s 2 \
       -t exon \
       -g gene_id \
       -a "${GENCODEGTF}" \
