@@ -1,0 +1,15 @@
+# This is the config file to be used when using the Isambard3 server
+
+# Relevant directories 
+export SHORTREADS="/lfs1i3/projects/e6e/RawData/Exeter_matched"
+export RNASEQDIR="/lfs1i3/projects/e6e/RNASeq/Exeter_matched"
+
+
+# Resources 
+export RESOURCESDIR="/lfs1i3/projects/e6e/Resources"  
+export SCRIPTSDIR="/lfs1i3/projects/e6e/BBF2019/Scripts"
+
+export REFGENOME="/lfs1i3/projects/e6e/Resources/genome.fa"
+export GENCODEGTF="/lfs1i3/projects/e6e/Resources/gencode.v48.annotation.gtf"
+
+export MASTERTRANSCRIPTOME="/lfs1i3/projects/e6e/Resources/custom_brain_transcriptome.fasta"
