@@ -8,9 +8,9 @@
 #SBATCH --cpus-per-task=16 # full node utilisation 
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # email me at job completion
-#SBATCH --output=/lustre/home/vs455/LogFiles/PrepareMergedFiles-%j.out
-#SBATCH --error=/lustre/home/vs455/LogFiles/PrepareMergedFiles-%j.err
-#SBATCH --job-name=PrepareMergedFiles
+#SBATCH --output=/lustre/home/vs455/LogFiles/PrepareMergedInput-%j.out
+#SBATCH --error=/lustre/home/vs455/LogFiles/PrepareMergedInput-%j.err
+#SBATCH --job-name=PrepareMergedInput
 
 ## bash script to automate preparation of merging of individual processed SMRT cell data into file of filenames (fofn)
 ## this script requires processed flnc.bam files are located in the ${PROCESSEDDIR}/Refine folder
@@ -24,7 +24,7 @@
 
 set -euo pipefail
 
-echo "Starting preparation of merged SMRT cell input files"
+echo "Preparing individual SMRT cell FLNC data as required for subsequent merged analysis..."
 
 ## Load config and environment 
 source ./Config/config.txt
@@ -34,10 +34,10 @@ source activate isoseq_tools
 
 
 # Set output dir
-mkdir -p "${PROCESSEDDIR}/FLNC"
+mkdir -p "${MERGEDDIR}/PreparedFLNC"
 
 
-# Check how many FLNC BAM files exist
+## Check how many FLNC BAM files exist
 echo "Scanning for FLNC BAM files in: ${PROCESSEDDIR}/Refine..."
 
 bam_files=("${PROCESSEDDIR}"/Refine/*.flnc.bam)
@@ -50,10 +50,10 @@ fi
 echo "Found ${#bam_files[@]} SMRT cell(s)"
 
 
-# Automate to all SMRT cell runs 
+## Prepare all SMRT cell runs 
 for bam in "${bam_files[@]}"; do
     run=$(basename "$bam" .flnc.bam)
-    renamed_out="${PROCESSEDDIR}/FLNC/${run}.flnc.bam"
+    renamed_out="${MERGEDDIR}/PreparedFLNC/${run}.flnc.bam"
 
     echo "Processing: $run"
 
@@ -81,6 +81,7 @@ for bam in "${bam_files[@]}"; do
     # Generate PBI index file
     echo "Generating PBI index..."
     pbindex "$renamed_out"
+    echo 
 
 done
 
@@ -88,15 +89,15 @@ done
 
 
 # Create file of filenames  
-echo "" 
-if [ ! -f ${PROCESSEDDIR}/FLNC/flnc.fofn ]; then
+echo  
+if [ ! -f ${MERGEDDIR}/PreparedFLNC/flnc.fofn ]; then
     echo "Creating file of filenames (fofn)..."
-    find ${PROCESSEDDIR}/FLNC -name "*.flnc.bam" > ${PROCESSEDDIR}/FLNC/flnc.fofn
+    find ${MERGEDDIR}/PreparedFLNC/ -name "*.flnc.bam" > ${MERGEDDIR}/PreparedFLNC/flnc.fofn
 else
     echo "flnc.fofn exists - skipping"
 fi
 
-echo "" 
-echo "Preparation of merged SMRT cell data complete"
+echo 
+echo "Individual SMRT cell data (FLNC reads) prepared. Ready for merged analysis."
 
 # End of script 

@@ -35,15 +35,15 @@ source activate isoseq_tools
 ## Set output dir
 mkdir -p "${MERGEDDIR}/Clustered"
 mkdir -p "${MERGEDDIR}/Aligned"
-mkdir -p "${MASTERTRANSCRIPTOME}/Isoforms"
+mkdir -p "${TRANSCRIPTOMEDIR}/Isoforms"
 
 
 ## Set relevant filepaths and output prefix 
-fofn="${PROCESSEDDIR}/FLNC/flnc.fofn"
+fofn="${MERGEDDIR}/PreparedFLNC/flnc.fofn"
 
 out_cluster="${MERGEDDIR}/Clustered/clustered"
 out_mapped="${MERGEDDIR}/Aligned/mapped"
-out_collapse="${MASTERTRANSCRIPTOME}/Isoforms/collapsed"
+out_collapse="${TRANSCRIPTOMEDIR}/Isoforms/collapsed"
 
 
 ## Set safe temp directory

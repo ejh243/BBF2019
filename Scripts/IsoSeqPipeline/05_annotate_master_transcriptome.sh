@@ -35,20 +35,20 @@ source activate isoseq_tools
 
 
 ## Set output dir
-mkdir -p "${MASTERTRANSCRIPTOME}/Annotation"
+mkdir -p "${TRANSCRIPTOMEDIR}/Annotation/" 
 
-out_annotate="${MASTERTRANSCRIPTOME}/Annotation/collapsed_classification.txt"
+out_annotate="${TRANSCRIPTOMEDIR}/Annotation/collapsed_classification.txt"
 out_filtered="${out_annotate%.txt}.filtered_lite_classification.txt"
-out_saturation="${MASTERTRANSCRIPTOME}/Annotation/saturation.txt"
+out_saturation="${TRANSCRIPTOMEDIR}/Annotation/saturation.txt"
 
 
 ## Set input file paths 
-sorted_ref_gtf="${GENCODEGTF%.gtf}.sorted.gtf"
+sorted_ref_gtf="${ANNOTATIONGTF%.gtf}.sorted.gtf"
 
-isoform_gff="${MASTERTRANSCRIPTOME}/Isoforms/collapsed.gff"
+isoform_gff="${TRANSCRIPTOMEDIR}/Isoforms/collapsed.gff"
 sorted_isoform_gff="${isoform_gff%.gff}.sorted.gff"
 
-flnc_count="${MASTERTRANSCRIPTOME}/Isoforms/collapsed.flnc_count.txt"
+flnc_count="${TRANSCRIPTOMEDIR}/Isoforms/collapsed.flnc_count.txt"
 
 
 ## Step 1: Prepare (sort and index) input files (if not done already)
@@ -57,7 +57,7 @@ if [ -s "${sorted_ref_gtf}" ]; then
     echo "Reference GTF input already prepared - skipping..."
 else
     echo "Preparing Reference GTF input file..."
-    pigeon prepare ${GENCODEGTF} ${REFGENOME} 
+    pigeon prepare ${ANNOTATIONGTF} ${REFGENOME} 
 fi
 
 # Validate output
@@ -72,7 +72,7 @@ if [ -s "${sorted_isoform_gff}" ]; then
     echo "Collapsed Isoform GFF input already prepared - skipping..."
 else
     echo "Preparing Collapsed Isoform GFF input file..."
-    pigeon prepare ${MASTERTRANSCRIPTOME}/Isoforms/collapsed.gff
+    pigeon prepare ${TRANSCRIPTOMEDIR}/Isoforms/collapsed.gff
 fi
 
 # Validate output 
@@ -91,14 +91,14 @@ else
 
     # Check if required input file exists
     if [ ! -s "${flnc_count}" ]; then
-        echo "ERROR: Missing or empty FLNC count file in ${MASTERTRANSCRIPTOME}/Isoforms"
+        echo "ERROR: Missing or empty FLNC count file in ${TRANSCRIPTOMEDIR}/Isoforms"
         exit 1
     fi
 
     # Run Pigeon Classify 
     pigeon classify \
         --fl ${flnc_count} \
-        --out-dir ${MASTERTRANSCRIPTOME}/Annotation/ \
+        --out-dir ${TRANSCRIPTOMEDIR}/Annotation/ \
         --num-threads ${SLURM_CPUS_PER_TASK:-8} \
         ${sorted_isoform_gff} \
         ${sorted_ref_gtf} \
@@ -125,7 +125,7 @@ else
 fi
 
 
-echo ""
+echo 
 echo "Completed Transcriptome Annotation job"
 
 ## End of script 
