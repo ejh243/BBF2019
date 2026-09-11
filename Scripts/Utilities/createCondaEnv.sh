@@ -1,40 +1,56 @@
-## set up conda environment for isoseq3 pipeline
-## although tutorial for install says python 3.7, lima only works with python 2.7
+#!/usr/bin/env bash
+set -euo pipefail
 
-module load Miniconda2
-source ./Config/config.txt
+## set up conda environment for Modern IsoSeq and RNA-Seq pipelines 
 
-conda create --name isoseq python=2.7
-source activate isoseq
+## IsoSeq environment 
+#   Based on IsoSeq CLI workflow (version 4.3.0)
+#   No Cupcake scripts, uses Python 3 only
+#   Also installing Python data science software for downstream QC 
+conda create -n isoseq_tools -y \
+    -c conda-forge \
+    -c bioconda \
+    --strict-channel-priority \
+    python=3.10 \
+    isoseq \
+    lima \
+    pbmm2 \
+    pbpigeon \
+    pbbam \
+    pbccs \
+    samtools \
+    bamtools \
+    ipykernel \
+    jupyter \
+    pandas \
+    numpy \
+    matplotlib \
+    seaborn 
 
-conda install -n isoseq biopython
-conda install -n isoseq -c http://conda.anaconda.org/cgat bx-python
 
-conda install -n isoseq -c bioconda isoseq3
-conda install -n isoseq -c bioconda pbccs
-conda install -n isoseq -c bioconda lima
+## RNASeq environment 
+#   Installing gene-level and transcript-level quantification tools 
+#   And some R packages for downstream analysis 
+conda create -n rnaseq_tools -y \
+    -c conda-forge \
+    -c bioconda \
+    --strict-channel-priority \
+    python=3.10 \
+    fastqc \
+    star \
+    trim-galore \
+    salmon \
+    kallisto\
+    samtools \
+    r-essentials \
+    bioconductor-deseq2 \
+    subread 
 
-## below are optional
-conda install -n isoseq -c bioconda pbcoretools # for manipulating PacBio datasets
-conda install -n isoseq -c bioconda bamtools    # for converting BAM to fasta
-conda install -n isoseq -c bioconda pysam       # for making CSV reports
 
-source deactivate isoseq
+# To create environment.yml (with software versions)
+# conda env export --no-builds -n isoseq_tools > isoseq_tools_env_full.yml
+# conda env export --no-builds -n rnaseq_tools > rnaseq_tools_env_full.yml
 
-## set up conda environment for cupcake
-
-conda create -n anaCogent python=3.7 anaconda
-conda activate anaCogent
-
-cd ${SOFTWAREPATH}
-git clone https://github.com/Magdoll/cDNA_Cupcake.git
-
-cd cDNA_Cupcake
-pip install cython
-pip install biopython
-python setup.py build
-python setup.py install
-
-conda create --name suppa python=3.4
-conda activate suppa
-conda install -c bioconda suppa
+# To create environment.yml (cleaner version)
+# conda env export --from-history -n isoseq_tools > isoseq_tools_env.yml
+# conda env export --from-history -n rnaseq_tools > rnaseq_tools_env.yml

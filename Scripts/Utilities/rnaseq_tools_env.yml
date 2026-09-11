@@ -1,0 +1,17 @@
+name: rnaseq_tools
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - trim-galore
+  - python=3.10
+  - fastqc
+  - subread
+  - star
+  - samtools
+  - pandas
+  - r-essentials
+  - bioconductor-deseq2
+  - salmon
+prefix: /home/e6e/vs455.e6e/miniconda3/envs/rnaseq_tools
