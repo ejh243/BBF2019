@@ -50,6 +50,8 @@ sorted_isoform_gff="${isoform_gff%.gff}.sorted.gff"
 
 flnc_count="${TRANSCRIPTOMEDIR}/Isoforms/collapsed.flnc_count.txt"
 
+sorted_junctions="${JUNCTIONS%.tsv}.sorted.tsv"
+
 
 ## Step 1: Prepare (sort and index) input files (if not done already)
 # Step 1a: Prepare reference files 
@@ -82,6 +84,22 @@ if [ ! -s "${sorted_isoform_gff}" ]; then
 fi
 
 
+# Step 1c:  Prepare short read junctions coverage data (intropolis format)  
+if [ -s "${sorted_junctions}" ]; then 
+    echo "Short read junctions coverage TSV input already prepared - skipping..."
+else
+    echo "Preparing Short read Junctions coverage TSV input file..."
+    pigeon prepare ${JUNCTIONS}
+fi
+
+# Validate output
+if [ ! -s "${sorted_junctions}" ]; then
+    echo "ERROR: Junctions coverage TSV preparation failed"
+    exit 1
+fi
+
+
+
 ## Step 2: Classify Isoforms into categories 
 # if valid output file exists, skip step  
 if [ -s "${out_annotate}" ]; then 
@@ -100,6 +118,7 @@ else
         --fl ${flnc_count} \
         --out-dir ${TRANSCRIPTOMEDIR}/Annotation/ \
         --num-threads ${SLURM_CPUS_PER_TASK:-8} \
+        --coverage ${sorted_junctions} \
         ${sorted_isoform_gff} \
         ${sorted_ref_gtf} \
         ${REFGENOME} 
@@ -108,6 +127,7 @@ fi
 
 
 ## Step 3: Filter isoforms from the classification output
+# Excluding any filters for monoexonic transcripts 
 if [ -s "${out_filtered}" ]; then 
     echo "Filtered Isoform Classification file exists - skipping..."
 else

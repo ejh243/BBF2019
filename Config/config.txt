@@ -2,7 +2,7 @@
 export DATADIR="/lustre/projects/Research_Project-193495/RawData/PacBio"
 export PROCESSEDDIR="/lustre/projects/Research_Project-193495/01_IsoSeqProcessed"
 export MERGEDDIR="/lustre/projects/Research_Project-193495/02_IsoSeqMerged"
-export TRANSCRIPTOMEDIR="/lustre/projects/Research_Project-193495/03_MasterTranscriptome"
+export TRANSCRIPTOMEDIR="/lustre/home/vs455/MasterTranscriptome"
 
 export SHORTREADS="/lustre/projects/Research_Project-193495/"
 export RNASEQDIR="/lustre/projects/Research_Project-193495/RNASeq/EpiGABA"
@@ -13,6 +13,8 @@ export RESOURCESDIR="/lustre/projects/Research_Project-193495/Resources/"
 export SCRIPTSDIR="/lustre/home/vs455/BBF2019/Scripts"
 
 export REFGENOME="/lustre/projects/Research_Project-193495/Resources/references/grch38/ncbi/Homo_sapiens/NCBI/GRCh38/Sequence/WholeGenomeFasta/genome.fa"
-export ANNOTATIONGTF="/lustre/projects/Research_Project-193495/Resources/GENCODE/gencode.v48.annotation.gtf"
+export ANNOTATIONGTF="/lustre/home/vs455/gencode.v49.annotation.gtf"
 
 export PRIMERSEQ="/lustre/projects/Research_Project-193495/Resources/primer.fasta"
+
+export JUNCTIONS="/lustre/home/vs455/brain_custom_intropolis.tsv"

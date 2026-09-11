@@ -22,6 +22,8 @@ def parse_ccs_report(ccs_path):
         "ZMWs_fail": r"^ZMWs fail filters\s*:\s*(\d+)",
         "Fail_lacking_full_passes": r"^Lacking full passes\s*:\s*(\d+)",
         "Fail_below_min_RQ": r"^CCS below minimum RQ\s*:\s*(\d+)",
+        "Fail_coverage_drop": r"^Coverage drops \s*:\s*(\d+)",
+        "Fail_draft_generation": r"^Draft generation error\s*:\s*(\d+)",
     }
 
     # Extract relevant sections to the metrics dictionary 
@@ -34,7 +36,7 @@ def parse_ccs_report(ccs_path):
                     metrics[key] = int(match.group(1))
 
     # Check if all metrics are present 
-    required = ["ZMWs_input","ZMWs_pass", "ZMWs_fail", "Fail_lacking_full_passes", "Fail_below_min_RQ"]
+    required = ["ZMWs_input","ZMWs_pass", "ZMWs_fail", "Fail_lacking_full_passes", "Fail_below_min_RQ", "Fail_coverage_drop", "Fail_draft_generation"]
     for key in required:
         if key not in metrics:
             raise ValueError(f"Missing CCS metric: {key}")
@@ -100,6 +102,8 @@ def main():
 
     Fail_full_passes_pct = pct_calc(ccs["Fail_lacking_full_passes"], ccs["ZMWs_fail"])
     Fail_below_RQ_pct = pct_calc(ccs["Fail_below_min_RQ"], ccs["ZMWs_fail"])
+    Fail_coverage_pct = pct_calc(ccs["Fail_coverage_drop"], ccs["ZMWs_fail"])
+    Fail_draft_gen_pct = pct_calc(ccs["Fail_draft_generation"], ccs["ZMWs_fail"])
 
     FLNC_rate_pct = pct_calc(ref["FLNC_reads"], ccs["ZMWs_input"])
     FLNC_polyA_pct_input = pct_calc(ref["FLNC_polyA_reads"], ccs["ZMWs_input"])
@@ -116,6 +120,10 @@ def main():
         f"{Fail_full_passes_pct:.2f}",
         ccs["Fail_below_min_RQ"],
         f"{Fail_below_RQ_pct:.2f}",
+        ccs["Fail_coverage_drop"],
+        f"{Fail_coverage_pct:.2f}",
+        ccs["Fail_draft_generation"],
+        f"{Fail_draft_gen_pct:.2f}",
         ref["FL_reads"],
         ref["FLNC_reads"],
         f"{FLNC_rate_pct:.2f}",

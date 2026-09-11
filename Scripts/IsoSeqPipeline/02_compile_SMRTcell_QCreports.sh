@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p pq # submit to the serial queue
-#SBATCH --time=01:00:00 # Maximum wall time for the job.
+#SBATCH --time=00:10:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
@@ -41,7 +41,10 @@ py_script="${SCRIPTSDIR}/IsoSeqPipeline/parse_SMRTcell_QC_metrics.py"
 ccs_dir="${PROCESSEDDIR}/CCS"
 refine_dir="${PROCESSEDDIR}/Refine"
 
-OUT_TSV="${PROCESSEDDIR}/SMRTcell_QC_summary.tsv" 
+qc_dir="${PROCESSEDDIR}/QC"
+mkdir -p ${qc_dir}
+
+OUT_TSV="${qc_dir}/SMRTcell_QC_summary.tsv" 
 
 
 # Write column headers on the output TSV (once)
@@ -56,6 +59,10 @@ Failed_CCS_lacking_full_passes\t\
 Failed_CCS_lacking_full_passes(%)\t\
 Failed_CCS_below_min_RQ\t\
 Failed_CCS_below_min_RQ(%)\t\
+Failed_coverage_drop\t\
+Failed_coverage_drop(%)\t\
+Failed_draft_generation\t\
+Failed_draft_generation(%)\t\
 FL_reads\t\
 FLNC_reads\t\
 FLNC_rate_(%)\t\
