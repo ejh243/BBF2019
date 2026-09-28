@@ -44,7 +44,8 @@ conda create -n rnaseq_tools -y \
     samtools \
     r-essentials \
     bioconductor-deseq2 \
-    subread 
+    subread \
+    seqtk
 
 
 # To create environment.yml (with software versions)

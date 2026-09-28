@@ -14,4 +14,5 @@ dependencies:
   - r-essentials
   - bioconductor-deseq2
   - salmon
+  - seqtk
 prefix: /home/e6e/vs455.e6e/miniconda3/envs/rnaseq_tools

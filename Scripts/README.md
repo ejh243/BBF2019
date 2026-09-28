@@ -22,7 +22,7 @@ The Iso-Seq pipeline implements the current PacBio IsoSeq3 workflow (v4.3.0) to 
 **Software Installation:** 
 Required software is installed using the scripts in `Scripts/Utilities/` 
 Running `Scripts/Utilities/createCondaEnv_updated.sh` creates two Conda environments: isoseq_tools and rnaseq_tools. The required environment is activated automatically within the pipeline scripts, so manual activation is generally not required. 
-<br> The Conda environment (.yml) files are also located here <br> <br>
+<br> The Conda environment (.yml) files are also located here. <br> <br>
 
 ## Iso-Seq pipeline 
 An automated PacBio Iso-Seq analysis pipeline for constructing and annotating a master transcriptome from multiple SMRT cells <br>
@@ -42,8 +42,8 @@ An automated PacBio Iso-Seq analysis pipeline for constructing and annotating a 
     `sbatch Scripts/IsoSeqPipeline/03_prepare_merged_SMRTcell_input.sh`
 
 **4.  Build the master transcriptome** <br>
-    Processes data across all SMRT cells to construct a unified transcriptome. <br> This step: clusters similar FLNC reads (cluster2)
-    aligns clustered reads to the reference genome (pbmm2)
+    Processes data across all SMRT cells to construct a unified transcriptome. This step: <br> clusters similar FLNC reads (cluster2) <br>
+    aligns clustered reads to the reference genome (pbmm2) <br>
     collapses redundant transcripts into unique isoforms (collapse) <br> 
     Isoforms are merged based on genomic location and exon structure. <br>
     `sbatch Scripts/IsoSeqPipeline/04_build_master_transcriptome.sh`
@@ -57,8 +57,6 @@ An automated PacBio Iso-Seq analysis pipeline for constructing and annotating a 
 A typical project will generate an output directory structure similar to: 
 ```
 Project/ 
-├── RawData/ 
-│   └── PacBio/ 
 ├── 01_IsoSeqPreprocessed/
 │   ├── CCS/
 │   ├── Lima/
@@ -74,19 +72,26 @@ Project/
 ```
 
 ### Quick start
-1. Clone this repository.
-2. Create the Conda environments.
-3. Edit `Config/config.txt` for your project.
-4. Submit the pipeline scripts in numerical order.
+1. Clone this repository
+2. Create the Conda environments
+3. Edit `Config/config.txt` for your project
+4. Submit the pipeline scripts in numerical order
 
 
 ## RNA-Seq pipeline 
 Runs standard RNA-Seq pipeline for alignment and quantification of gene expression using short reads <br>
-load using `source activate rnaseq_tools` <br>
-
 ### Scripts used so far:
 1. Preprocessing of short reads (fastqc, trim_galore) <br>
     `sbatch Scripts/RNASeq/01_preprocess_ShortReads.sh`<br>
+    Includes: verifying paired FASTQ exists then runs FASTQC on raw reads, then trims and runs FASTQC on trimmed reads. At present it also runs alignment with STAR using gencode v48 star index. <br>
 
 2. Alignment against reference with GENCODE (STAR) <br>
-    `sbatch Scripts/RNASeq/02_align_ShortReads.sh` <br>
+    `sbatch Scripts/RNASeq/02_create_STAR_Index.sh` <br>
+    
+3. Quantify gene-level features across samples (FeatureCounts) <br>
+    `sbatch Scripts/RNASeq/02_quantify_gene_features.sh` <br>
+
+Note: STAR index, alignment and FC could be made into a single script? 
+
+4. Create Salmon Index 
+5. Quantify transcripts - this involves working with the raw or trimmed FASTQ files again [ideally should be the output of the first pre-processing script w/o running STAR alignment] 

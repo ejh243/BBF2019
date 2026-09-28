@@ -1,14 +1,14 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
-#SBATCH --time=24:00:00 # Maximum wall time for the job.
+#SBATCH --time=12:00:00 # Maximum wall time for the job.
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --cpus-per-task=16 # specify number of threads per task 
 #SBATCH --mem=64G # Memory usage 
 #SBATCH --mail-type=END # send email at job completion 
 #SBATCH --mail-user=v.suresh@exeter.ac.uk # enter email address
-#SBATCH --output=/lfs1i3/projects/e6e/LogFiles/AlignShortReads-%A_%a.out 
-#SBATCH --error=/lfs1i3/projects/e6e/LogFiles/AlignShortReads-%A_%a.err 
-#SBATCH --job-name=AlignShortReads
+#SBATCH --output=/lfs1i3/projects/e6e/LogFiles/PreprocessShortReads-%A_%a.out 
+#SBATCH --error=/lfs1i3/projects/e6e/LogFiles/PreprocessShortReads-%A_%a.err 
+#SBATCH --job-name=PreprocessShortReads
 #SBATCH --array=0-47%3 ## runs multiple jobs with 3 at any one time 
 
 ## bash script to automate preprocessing of paired short read data 
@@ -18,7 +18,7 @@
 ## do not store any sensitive data use config file to specify filepaths etc. 
 
 ## this script needs to be submitted from the main repository folder
-## Usage: sbatch Scripts/RNASeq/01_preprocess_and_align_ShortReads.sh
+## Usage: sbatch Scripts/RNASeq/01_preprocess_ShortReads.sh
 
 set -euo pipefail
 
@@ -120,11 +120,13 @@ else
 fi
 
 
-# Step 2: Run Trim Galore 
+# Step 2: Run Trim Galore, then FASTQC on trimmed reads
 echo
 if ! ls "${TRIMDIR}/${sampleName}"*val_1.f*q.gz >/dev/null 2>&1; then
     echo "Running Trim Galore, followed by FastQC... "
     trim_galore --paired "$f1" "$f2" --fastqc -o "$TRIMDIR"
+
+    # Move into trimmed_fastqc folder
     mv "${TRIMDIR}"/*fastqc.* "${FASTQC_TRIMMED}/" 2>/dev/null || true
 
 else
@@ -133,45 +135,5 @@ fi
 
 echo "Completed preprocessing for ${sampleName}"
 
-
-
-# Step 3: Run STAR alignment 
-echo
-echo "Preparing STAR alignment..."
-
-# Locate trimmed reads dynamically
-star_f1=$(ls "${TRIMDIR}/${sampleName}"*val_1.f*q.gz 2>/dev/null | head -n 1)
-star_f2=$(ls "${TRIMDIR}/${sampleName}"*val_2.f*q.gz 2>/dev/null | head -n 1)
-
-# Validate
-[[ -f "$star_f1" ]] || { echo "ERROR: Trimmed R1 not found"; exit 1; }
-[[ -f "$star_f2" ]] || { echo "ERROR: Trimmed R2 not found"; exit 1; }
-
-echo "Using trimmed reads:"
-echo "$star_f1"
-echo "$star_f2"
-
-
-## align with STAR using GENCODE v48 star index
-if [[ ! -f "${ALIGNEDRNA}/${sampleName}Log.final.out" ]]; then
-    echo "Starting STAR alignment..."
-
-    STAR \
-        --genomeDir "${RESOURCESDIR}/STARIndex" \
-        --runThreadN $THREADS \
-        --readFilesIn "$star_f1" "$star_f2" \
-        --readFilesCommand zcat \
-        --outFileNamePrefix "${ALIGNEDRNA}/${sampleName}" \
-        --outSAMtype BAM SortedByCoordinate \
-        --outSAMunmapped Within \
-        --outSAMattributes Standard
-
-    echo "STAR alignment complete."
-else
-    echo "STAR already completed for ${sampleName}, skipping"
-fi
-
-echo
-echo "Pipeline completed for ${sampleName}"
 
 # End of script 

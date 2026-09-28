@@ -6,10 +6,14 @@ export RNASEQDIR="/lfs1i3/projects/e6e/RNASeq/Exeter_matched"
 
 
 # Resources 
-export RESOURCESDIR="/lfs1i3/projects/e6e/Resources"  
+export RESOURCESDIR="/lfs1i3/projects/e6e/Resources/MasterTranscriptome"  
 export SCRIPTSDIR="/lfs1i3/projects/e6e/BBF2019/Scripts"
 
-export REFGENOME="/lfs1i3/projects/e6e/Resources/genome.fa"
-export GENCODEGTF="/lfs1i3/projects/e6e/Resources/gencode.v48.annotation.gtf"
+export REFGENOME="/lfs1i3/projects/e6e/Resources/reference_genome/hg38_genome.fa"
+export GENCODEGTF="/lfs1i3/projects/e6e/Resources/GENCODE/gencode.v49.annotation.gtf"
 
-export MASTERTRANSCRIPTOME="/lfs1i3/projects/e6e/Resources/custom_brain_transcriptome.fasta"
+export GTF="/lfs1i3//projects/e6e/Resources/MasterTranscriptome/transcriptome_filt_annotated.gff"
+
+export TRANSCRIPTSFA="/lfs1i3/projects/e6e/Resources/MasterTranscriptome/filtered_transcriptome.fasta"
+
+export MASTERTRANSCRIPTOME="/lfs1i3/projects/e6e/Resources/MasterTranscriptome/custom_brain_transcriptome.fasta"
