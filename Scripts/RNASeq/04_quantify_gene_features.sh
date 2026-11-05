@@ -37,8 +37,12 @@ conda activate rnaseq_tools
 ## Set variables  
 THREADS="${SLURM_CPUS_PER_TASK:-16}"
 
-ALIGNEDDIR="${RNASEQDIR}/aligned_reads"
-OUTPUT="${RNASEQDIR}/gene_counts_transcriptome.txt"
+ALIGNEDDIR="${RNASEQDIR}/02_aligned_reads"
+OUTDIR="${RNASEQDIR}/03_gene_quantification" 
+
+mkdir -p "$OUTDIR"
+
+OUTPUT="${OUTDIR}/gene_counts_transcriptome.txt"
 
 
 ## Check input BAM files exist

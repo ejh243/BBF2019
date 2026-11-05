@@ -36,9 +36,9 @@ conda activate rnaseq_tools
 ## Set variables  
 THREADS=${SLURM_CPUS_PER_TASK:-16}
 
-TRIMDIR="${RNASEQDIR}/reads_trimmed"
+TRIMDIR="${RNASEQDIR}/01_processed_reads/reads_trimmed"
 INDEX="${RESOURCESDIR}/SalmonIndex"
-OUTDIR="${RNASEQDIR}/transcript_quant"
+OUTDIR="${RNASEQDIR}/04_transcript_quantification/salmonResults"
 
 mkdir -p "$OUTDIR" 
 
@@ -60,10 +60,6 @@ if [[ ${SLURM_ARRAY_TASK_ID} -ge ${#SAMPLES[@]} ]]; then
 fi
 
 
-## Run STAR alignment 
-echo
-echo "Preparing STAR alignment..."
-
 ## Locate trimmed reads dynamically
 read1=$(ls "${TRIMDIR}/${sampleName}"*val_1.f*q.gz 2>/dev/null | head -n 1)
 read2=$(ls "${TRIMDIR}/${sampleName}"*val_2.f*q.gz 2>/dev/null | head -n 1)
@@ -76,6 +72,7 @@ read2=$(ls "${TRIMDIR}/${sampleName}"*val_2.f*q.gz 2>/dev/null | head -n 1)
 echo "Using trimmed reads:"
 echo "$read1"
 echo "$read2"
+echo 
 
 mkdir -p "${OUTDIR}/${sampleName}"
 

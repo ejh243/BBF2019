@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
-#SBATCH --time=12:00:00 # Maximum wall time for the job.
+#SBATCH --time=05:00:00 # Maximum wall time for the job.
 #SBATCH --nodes=1 # specify number of nodes.
 #SBATCH --cpus-per-task=16 # specify number of threads per task 
 #SBATCH --mem=64G # Memory usage 
@@ -43,12 +43,13 @@ THREADS=${SLURM_CPUS_PER_TASK:-16}
 
 
 ## Output directories 
-TRIMDIR="${RNASEQDIR}/reads_trimmed"
-FASTQC_RAW="${RNASEQDIR}/fastqc_raw"
-FASTQC_TRIMMED="${RNASEQDIR}/fastqc_trimmed"
-ALIGNEDRNA="${RNASEQDIR}/aligned_reads"
+PROCESSEDDIR="${RNASEQDIR}/01_processed_reads"
 
-mkdir -p "$TRIMDIR" "$FASTQC_RAW" "$FASTQC_TRIMMED" "$ALIGNEDRNA"
+TRIMDIR="${PROCESSEDDIR}/reads_trimmed"
+FASTQC_RAW="${PROCESSEDDIR}/fastqc_raw"
+FASTQC_TRIMMED="${PROCESSEDDIR}/fastqc_trimmed"
+
+mkdir -p "$PROCESSEDDIR" "$TRIMDIR" "$FASTQC_RAW" "$FASTQC_TRIMMED" 
 
 
 ## Locate all input FASTQ files 

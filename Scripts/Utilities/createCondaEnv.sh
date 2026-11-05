@@ -26,6 +26,18 @@ conda create -n isoseq_tools -y \
     numpy \
     matplotlib \
     seaborn 
+# Activate using: conda activate isoseq_tools 
+# Deactivate using: conda deactivate
+
+
+## SQANTI3 environment
+#   This is part of the Isoseq analysis pipeline, but sqanti requires a separate conda env
+wget https://github.com/ConesaLab/SQANTI3/releases/tag/v6.0/SQANTI3_v6.0.zip
+mkdir sqanti3
+unzip SQANTI3_v6.0.zip -d sqanti3
+conda env create -f SQANTI3.conda_env.yml
+# Activate using: conda activate sqanti3
+# Deactivate using: conda deactivate
 
 
 ## RNASeq environment 
@@ -46,6 +58,8 @@ conda create -n rnaseq_tools -y \
     bioconductor-deseq2 \
     subread \
     seqtk
+# Activate using: conda activate rnaseq_tools 
+# Deactivate using: conda deactivate
 
 
 # To create environment.yml (with software versions)

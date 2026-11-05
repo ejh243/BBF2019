@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
-#SBATCH --time=05:00:00 # Maximum wall time for the job.
+#SBATCH --time=02:00:00 # Maximum wall time for the job.
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
 #SBATCH --cpus-per-task=16 # full node utilisation
@@ -36,9 +36,14 @@ source ~/miniconda3/etc/profile.d/conda.sh
 conda activate rnaseq_tools
 
 ## Relevant directories
-TRIMDIR="${RNASEQDIR}/reads_trimmed"
+TRIMDIR="${RNASEQDIR}/01_processed_reads/reads_trimmed"
 INDEX="${RESOURCESDIR}/STARIndex"
-ALIGNEDRNA="${RNASEQDIR}/aligned_reads"
+ALIGNEDRNA="${RNASEQDIR}/02_aligned_reads"
+
+mkdir -p "$ALIGNEDRNA" 
+
+THREADS=${SLURM_CPUS_PER_TASK:-16}
+
 
 ## Extract sampleName from TRIMDIR 
 mapfile -t SAMPLES < <(
