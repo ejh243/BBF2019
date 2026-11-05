@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --export=ALL # export all environment variables to the batch job.
 #SBATCH -p pq # submit to the serial queue
-#SBATCH --time=24:00:00 # Maximum wall time for the job.
+#SBATCH --time=12:00:00 # Maximum wall time for the job.
 #SBATCH -A Research_Project-193495 # research project to submit under. 
 #SBATCH --nodes=1 # specify number of nodes
 #SBATCH --ntasks=1 # specify number of tasks per node
@@ -34,7 +34,7 @@ source activate isoseq_tools
 
 ## Set output dir
 mkdir -p "${MERGEDDIR}/Clustered"
-mkdir -p "${MERGEDDIR}/Aligned"
+mkdir -p "${MERGEDDIR}/Mapped"
 mkdir -p "${TRANSCRIPTOMEDIR}/Isoforms"
 
 
@@ -42,7 +42,7 @@ mkdir -p "${TRANSCRIPTOMEDIR}/Isoforms"
 fofn="${MERGEDDIR}/PreparedFLNC/flnc.fofn"
 
 out_cluster="${MERGEDDIR}/Clustered/clustered"
-out_mapped="${MERGEDDIR}/Aligned/mapped"
+out_mapped="${MERGEDDIR}/Mapped/mapped"
 out_collapse="${TRANSCRIPTOMEDIR}/Isoforms/collapsed"
 
 
@@ -53,7 +53,8 @@ mkdir -p "${TMPDIR}"
 echo "TMPDIR set to: $TMPDIR"
 df -h "$TMPDIR"
 
-## Step 1: IsoSeq Cluster2 - Cluster FLNC reads and generate transcripts
+
+## Step 1: IsoSeq Cluster2 - Cluster FLNC reads into sequence similar transcripts
 # if valid output file exists, skip step  
 if [ -s "${out_cluster}.bam" ]; then 
     echo "IsoSeq Cluster2 output exists - skipping..."
@@ -124,8 +125,12 @@ else
     ${out_collapse}.gff
 fi
 
-echo "Master Transcriptome complete"
+echo "Redundant Isoform models collapsed" 
+echo 
 
-rmdir -r "${TMPDIR}" # remove dir with temporary files 
+# remove dir with temporary files 
+rmdir -r "${TMPDIR}" 
+
+echo "Build Master Transcriptome job completed."
 
 ## End of script

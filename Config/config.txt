@@ -17,4 +17,6 @@ export ANNOTATIONGTF="/lustre/home/vs455/gencode.v49.annotation.gtf"
 
 export PRIMERSEQ="/lustre/projects/Research_Project-193495/Resources/primer.fasta"
 
-export JUNCTIONS="/lustre/home/vs455/brain_custom_intropolis.tsv"
+export JUNCTIONDIR="/lfs1i3/projects/e6e/RNASeq/Exeter_matched/02_aligned_reads/alignment_against_gencode"
+
+export SQANTI3="/lfs1i3/projects/e6e/sqanti3/sqanti3_qc.py"
